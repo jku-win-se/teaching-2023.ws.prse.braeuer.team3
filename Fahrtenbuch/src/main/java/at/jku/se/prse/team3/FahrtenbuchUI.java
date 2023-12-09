@@ -900,6 +900,11 @@ public class FahrtenbuchUI extends Application {
         datum.getEditor().setDisable(true);
         datum.setMaxWidth(200);
 
+        ListView listView = new ListView();
+        ObservableList kategorien = FXCollections.observableArrayList();
+        kategorien.addAll(fahrtenbuch.getKategorien());
+        listView.setItems(kategorien);
+
         // Ergebnis des Dialogs konvertieren, wenn der Benutzer "Filtern" klickt
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == filterButtonType) {
@@ -908,6 +913,14 @@ public class FahrtenbuchUI extends Application {
                     fahrtenListe.clear();
                     fahrtenListe.addAll(fahrtenbuch.filterByDate(date));
                     fahrtenTabelle.setItems(this.fahrtenListe);
+
+                    //TODO filter nach kategorie übernehmen
+                    ObservableList selectedItems = listView.getSelectionModel().getSelectedItems();
+                    for(Object o : selectedItems){
+                        System.out.println("o = " + o + " (" + o.getClass() + ")");
+                        fahrtenbuch.filterByKategorie((String)o);
+                    }
+
                 } catch (DateTimeParseException d) {
                     Alert dateAlert = new Alert(Alert.AlertType.WARNING);
                     dateAlert.setContentText("Wrong Format! use: DD:MM:YYYY or HH:MM:SS..");
@@ -918,9 +931,10 @@ public class FahrtenbuchUI extends Application {
             return false;
         });
 
+        //VBox vBox = new VBox(listView);
+
         VBox fahrtTextinputboxen = new VBox(1);
-        fahrtTextinputboxen.getChildren().addAll(datum
-        );
+        fahrtTextinputboxen.getChildren().addAll(datum,listView);
 
         ScrollPane scrollPane = new ScrollPane(fahrtTextinputboxen);
         scrollPane.setFitToWidth(true); // Passt die Breite der ScrollPane an die Breite der VBox an
