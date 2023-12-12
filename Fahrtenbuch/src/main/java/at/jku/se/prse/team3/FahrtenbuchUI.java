@@ -1051,19 +1051,25 @@ public class FahrtenbuchUI extends Application {
         Dialog<Boolean> dialog = new Dialog<>();
         dialog.setTitle("Fahrt filtern");
         ButtonType filterButtonType = new ButtonType("Filtern", ButtonBar.ButtonData.OK_DONE);
-        ButtonType filterAvgUnder = new ButtonType("FilternByVAvgUnder", ButtonBar.ButtonData.OK_DONE);
-        ButtonType filterAvgOver = new ButtonType("FilternByVAvgOver", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(filterButtonType,filterAvgUnder,filterAvgOver, ButtonType.CANCEL);
+        ButtonType filterAvgBT = new ButtonType("FilternBy Ø V", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(filterButtonType,filterAvgBT, ButtonType.CANCEL);
+        Label Label1 = new Label("Fahrten über Datum und/oder Kategorie filtern");
         DatePicker datum = new DatePicker();
         datum.setPromptText("Datum der Fahrt");
         datum.getEditor().setDisable(true);
         datum.setMaxWidth(200);
-        Label avgLabel = new Label("Avg V");
-        TextField avgTF = new TextField();
-        avgTF.setPromptText("avg V eingeben");
-        avgTF.setMaxWidth(200);
+        Label avgLabel = new Label("Fahrten über der eingegebenen Durchschnittsgeschwindigkeit anzeigen");
+        TextField avgTFO = new TextField();
+        Label avgLabel2 = new Label("Oder Fahrten unter der eingegebenen Durchschnittsgeschwindigkeit anzeigen");
+        TextField avgTFU = new TextField();
+        avgTFO.setPromptText("Durchschnitt V eingeben");
+        avgTFO.setMaxWidth(200);
+        avgTFU.setPromptText("Durchschnitt V eingeben");
+        avgTFU.setMaxWidth(200);
         Label categorylabel = new Label("Kategorie");
         categorylabel.setMaxWidth(200);
+        Label LabelOder = new Label("oder");
+
 
         //category filter
         final CheckComboBox<String> categoryfilter = new CheckComboBox<>(fahrtenbuch.getKategorien(true));
@@ -1088,12 +1094,19 @@ public class FahrtenbuchUI extends Application {
                 }
                 return true;
                 //show only speeds equal or under given input
-            } else if (dialogButton == filterAvgUnder) {
+            } else if (dialogButton == filterAvgBT) {
                 try{
-                    double avg = Double.parseDouble(avgTF.getText());
-                    fahrtenListe.clear();
-                    fahrtenListe.addAll(fahrtenbuch.filterByAvgVUnder(avg));
-                    fahrtenTabelle.setItems(this.fahrtenListe);
+                    if(avgTFO.getText().isEmpty() && !avgTFU.getText().isEmpty()) {
+                        double avg = Double.parseDouble(avgTFU.getText());
+                        fahrtenListe.clear();
+                        fahrtenListe.addAll(fahrtenbuch.filterByAvgVUnder(avg));
+                        fahrtenTabelle.setItems(this.fahrtenListe);
+                    } else if (!avgTFO.getText().isEmpty() && avgTFU.getText().isEmpty()) {
+                        double avg = Double.parseDouble(avgTFO.getText());
+                        fahrtenListe.clear();
+                        fahrtenListe.addAll(fahrtenbuch.filterByAvgVOver(avg));
+                        fahrtenTabelle.setItems(this.fahrtenListe);
+                    }
                 } catch (NumberFormatException n){
                     Alert numberAlert = new Alert(Alert.AlertType.WARNING);
                     numberAlert.setContentText("WrongFormat!");
@@ -1101,23 +1114,13 @@ public class FahrtenbuchUI extends Application {
                 }
                 return true;
                 //show only speeds equal or over given input
-            }else if (dialogButton == filterAvgOver) {
-                try{
-                    double avg = Double.parseDouble(avgTF.getText());
-                    fahrtenListe.clear();
-                    fahrtenListe.addAll(fahrtenbuch.filterByAvgVOver(avg));
-                    fahrtenTabelle.setItems(this.fahrtenListe);
-                } catch (NumberFormatException n){
-                    Alert numberAlert = new Alert(Alert.AlertType.WARNING);
-                    numberAlert.setContentText("WrongFormat!");
-                    numberAlert.showAndWait();
-                }
-                return true;
             }
             return false;
         });
         VBox fahrtTextinputboxen = new VBox(1);
-        fahrtTextinputboxen.getChildren().addAll(datum,avgLabel,avgTF,categorylabel,categoryfilter);
+        fahrtTextinputboxen.getChildren().addAll(Label1, datum,categorylabel,categoryfilter,LabelOder, avgLabel,avgTFO,avgLabel2,avgTFU);
+        VBox.setMargin(categoryfilter, new Insets(0, 0, 50, 0));
+        VBox.setMargin(LabelOder, new Insets(0, 0, 50, 0));
         ScrollPane scrollPane = new ScrollPane(fahrtTextinputboxen);
         scrollPane.setFitToWidth(true); // Passt die Breite der ScrollPane an die Breite der VBox an
         scrollPane.setPrefHeight(400); // Setzen Sie eine bevorzugte Höhe

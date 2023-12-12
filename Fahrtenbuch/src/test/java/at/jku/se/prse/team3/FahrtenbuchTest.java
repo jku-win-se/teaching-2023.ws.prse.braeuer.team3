@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class FahrtenbuchTest {
