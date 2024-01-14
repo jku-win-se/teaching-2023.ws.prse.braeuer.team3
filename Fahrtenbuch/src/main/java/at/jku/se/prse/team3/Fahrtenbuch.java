@@ -12,10 +12,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
@@ -28,6 +25,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Fahrtenbuch {
+    Path path = Paths.get(System.getProperty("user.home") + File.separator + "Documents" + File.separator + "Fahrtenbuch 0.0.3");
 
     private List<String> kategorien;
     private List<Fahrt> fahrten;
@@ -212,11 +210,18 @@ public class Fahrtenbuch {
      */
     public void exportFahrt() throws IOException {
         //export Fahrten&Kategorien as CSV.
-        Path path = Paths.get(System.getProperty("user.home") + File.separator + "Documents" + File.separator + "Fahrtenbuch 0.0.3");
         String realExport = path.toString();
 
-        String exportFahrten = realExport + File.separator + "fahrten.csv";
-        String exportKategorien = realExport + File.separator + "Kategorien.csv";
+        exporterMethod(realExport);
+    }
+    public void exportManual(Path manualExpPath) throws IOException {
+        String manualExport=manualExpPath.toString();
+        exporterMethod(manualExport);
+    }
+
+    private void exporterMethod(String exportPath) throws IOException {
+        String exportFahrten = exportPath + File.separator + "fahrten.csv";
+        String exportKategorien = exportPath + File.separator + "Kategorien.csv";
         CSVWriter csvWriter = new CSVWriter(new FileWriter(exportFahrten));
 
 
@@ -254,14 +259,27 @@ public class Fahrtenbuch {
     public void importFahrt() throws IOException, CsvValidationException {
         //export Fahrten&Kategorien as CSV.
 
-        Path path = Paths.get(System.getProperty("user.home") + File.separator + "Documents" + File.separator + "Fahrtenbuch 0.0.3");
+        path = Paths.get(System.getProperty("user.home") + File.separator + "Documents" + File.separator + "Fahrtenbuch 0.0.3");
         Path realImport = path;
-        Path importFahrten = Paths.get(realImport + File.separator + "fahrten.csv");
+        importerMethod(realImport);
 
-        Path importKategorien = Paths.get(realImport + File.separator + "Kategorien.csv");
+    }
+
+    public void manualImport(Path path){
+        importerMethod(path);
+
+    }
+
+
+    private void importerMethod(Path importPath){
+        fahrten.clear();
+        kategorien.clear();
+        Path importFahrten = Paths.get(importPath + File.separator + "fahrten.csv");
+
+        Path importKategorien = Paths.get(importPath + File.separator + "Kategorien.csv");
         try {
 
-            Files.createDirectory(realImport);
+            Files.createDirectory(Path.of(System.getProperty("user.home") + File.separator + "Documents" + File.separator + "Fahrtenbuch 0.0.3"));
             System.out.println("Neues System...");
             try (CSVWriter writer = new CSVWriter(new FileWriter(importFahrten.toFile()))) {
             }
@@ -307,9 +325,11 @@ public class Fahrtenbuch {
 
                 }
 
-            } catch (NullPointerException nullPointerException) {
+            } catch (NullPointerException | FileNotFoundException nullPointerException) {
 
 
+            } catch (IOException | CsvValidationException e) {
+                throw new RuntimeException(e);
             }
 
             try (CSVReader reader2 = new CSVReader(new FileReader(importKategorien.toFile()))) {
@@ -319,11 +339,15 @@ public class Fahrtenbuch {
                         this.kategorien.add(cat.trim());
                     }
                 }
-            } catch (CsvException e) {
+            } catch (CsvException | FileNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
                 throw new RuntimeException(e);
             }
 
 
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
 
     }

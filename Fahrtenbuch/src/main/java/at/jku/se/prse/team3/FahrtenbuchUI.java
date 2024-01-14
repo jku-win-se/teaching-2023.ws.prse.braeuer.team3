@@ -28,17 +28,17 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
 
 import javafx.scene.shape.Box;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.stage.*;
 import javafx.util.Duration;
 import javafx.util.converter.*;
 import org.controlsfx.control.CheckComboBox;
 
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.YearMonth;
@@ -765,11 +765,38 @@ public class FahrtenbuchUI extends Application {
             overview(primaryStage);
             primaryStage.hide();
         });
-        TextField enterSavePath = new TextField();
-        enterSavePath.setText("Hier eingeben:");
-        enterSavePath.setStyle("-fx-text-fill: grey;");
-        enterSavePath.setMaxWidth(200);
-        Label Pfad = new Label("Speicherpfad: ");
+        DirectoryChooser enterSavePath= new DirectoryChooser();
+        enterSavePath.titleProperty().set("Path");
+        enterSavePath.setInitialDirectory(new File(System.getProperty("user.home")));
+
+        Button pfad = new Button("Import Data");
+        pfad.setStyle("-fx-background-color: red;");
+        pfad.setOnAction(event -> {
+            File selectedFile=enterSavePath.showDialog(primaryStage);
+            if (selectedFile != null) {
+
+
+            Path importPath= Path.of(selectedFile.getAbsolutePath());
+            fahrtenbuch.manualImport(importPath);
+            }
+        });
+        Button exportButton = new Button();
+        exportButton.setText("Export Data");
+        exportButton.setStyle("-fx-background-color: green;");
+        exportButton.setOnAction(event -> {
+                    File selectedFile=enterSavePath.showDialog(primaryStage);
+            if (selectedFile != null) {
+                Path path= Path.of(selectedFile.getAbsolutePath());
+
+
+            try {
+                fahrtenbuch.exportManual(path);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            }
+        });
+
 
         TextField kategorienInput = new TextField();
         kategorienInput.setPromptText("Kategorien eingeben:");
@@ -805,12 +832,12 @@ public class FahrtenbuchUI extends Application {
         primaryStage.setTitle("Einstellungen");
         GridPane gridSettings = new GridPane();
 
-        gridSettings.getChildren().addAll(enterSavePath, backButton, Pfad, angezeigteKategorien, kategorieInp);
+        gridSettings.getChildren().addAll(exportButton, backButton, pfad, angezeigteKategorien, kategorieInp);
 
         gridSettings.setAlignment(Pos.CENTER);
         GridPane.setConstraints(backButton, 0, 5);
-        GridPane.setConstraints(Pfad, 0, 1);
-        GridPane.setConstraints(enterSavePath, 1, 1);
+        GridPane.setConstraints(pfad, 0, 1);
+        GridPane.setConstraints(exportButton, 1, 1);
         GridPane.setConstraints(angezeigteKategorien, 1, 2);
 
         GridPane.setConstraints(kategorieInp, 0, 2);
