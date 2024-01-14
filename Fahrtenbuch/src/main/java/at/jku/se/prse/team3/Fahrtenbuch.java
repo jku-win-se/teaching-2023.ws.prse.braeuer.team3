@@ -1,14 +1,9 @@
 package at.jku.se.prse.team3;
-
+import java.util.logging.Logger;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
 import com.opencsv.exceptions.CsvValidationException;
-import javafx.beans.Observable;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -25,6 +20,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Fahrtenbuch {
+    private static final Logger LOGGER=Logger.getLogger(Fahrtenbuch.class.getName());
     Path path = Paths.get(System.getProperty("user.home") + File.separator + "Documents" + File.separator + "Fahrtenbuch 0.0.3");
 
     private List<String> kategorien;
@@ -280,14 +276,14 @@ public class Fahrtenbuch {
         try {
 
             Files.createDirectory(Path.of(System.getProperty("user.home") + File.separator + "Documents" + File.separator + "Fahrtenbuch 0.0.3"));
-            System.out.println("Neues System...");
+            LOGGER.info("Neues System...");
             try (CSVWriter writer = new CSVWriter(new FileWriter(importFahrten.toFile()))) {
             }
             try (CSVWriter writer2 = new CSVWriter(new FileWriter(importKategorien.toFile()))) {
             }
-            System.out.println("Initialisiere Datensätze...");
+            LOGGER.info("Initialisiere Datensätze...");
         } catch (FileAlreadyExistsException f) {
-            System.out.println("Willkommen zurück!");
+           LOGGER.info("Willkommen zurück!");
 
             String[] data;
             String kFZKennzeichen;
@@ -329,7 +325,7 @@ public class Fahrtenbuch {
 
 
             } catch (IOException | CsvValidationException e) {
-                throw new inExportExc("An unexpected Error occured during Import",e);
+                throw new InExportExc("An unexpected Error occured during Import",e);
             }
 
             try (CSVReader reader2 = new CSVReader(new FileReader(importKategorien.toFile()))) {
@@ -340,14 +336,14 @@ public class Fahrtenbuch {
                     }
                 }
             } catch (CsvException | FileNotFoundException e) {
-                throw new inExportExc("An Error occured during Import",e);
+                throw new InExportExc("An Error occured during Import",e);
             } catch (IOException e) {
-                throw new inExportExc("An unexpected Error occured during Import",e);
+                throw new InExportExc("An unexpected Error occured during Import",e);
             }
 
 
         } catch (IOException e) {
-            throw new inExportExc("An unexpected Error occured during Import",e);
+            throw new InExportExc("An unexpected Error occured during Import",e);
         }
 
     }
@@ -531,8 +527,8 @@ public class Fahrtenbuch {
         }
         return gefilterteFahrten;
     }
-    public class inExportExc extends RuntimeException{
-        public inExportExc(String msg, Throwable cause){
+    public class InExportExc extends RuntimeException{
+        public InExportExc(String msg, Throwable cause){
             super(msg,cause);
         }
     }

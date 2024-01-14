@@ -1,5 +1,5 @@
 package at.jku.se.prse.team3;
-
+import java.util.logging.Logger;
 
 import javafx.animation.FadeTransition;
 
@@ -45,14 +45,13 @@ import java.time.YearMonth;
 
 import java.time.format.DateTimeParseException;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 
 public class FahrtenbuchUI extends Application {
     private Image logo;
     private Image logoFull;
-
+    private static final Logger LOGGER=Logger.getLogger(Fahrtenbuch.class.getName());
     private Button filterButton;
     private Fahrtenbuch fahrtenbuch;
     private Button setButton;
@@ -118,7 +117,7 @@ public class FahrtenbuchUI extends Application {
 
 
         logoView.setOpacity(0);
-       // primaryStage.initStyle(StageStyle.UNDECORATED);
+        primaryStage.initStyle(StageStyle.DECORATED);
         ProgressBar lol = new ProgressBar();
         lol.setStyle("-fx-accent: black;");
         lol.setMaxWidth(logo.getWidth());
@@ -185,7 +184,7 @@ public class FahrtenbuchUI extends Application {
             logo=new WritableImage(100,100);
         }
 
-        primaryStage = new Stage(StageStyle.DECORATED);
+
         primaryStage.getIcons().add(logoFull);
         kategorienListe = fahrtenbuch.getKategorien(true);
         //start tabellerische Ansicht
@@ -344,7 +343,7 @@ public class FahrtenbuchUI extends Application {
             try {
                 fahrtenbuch.exportFahrt();
             } catch (IOException e) {
-                throw new inExportExc("An Error occurred during Export",e);
+                throw new InExportExc("An Error occurred during Export",e);
             }
         });
     }
@@ -582,7 +581,7 @@ public class FahrtenbuchUI extends Application {
             try {
                 fahrtenbuch.exportFahrt();
             } catch (IOException e) {
-                throw new inExportExc("An Error occurred during Export",e);
+                throw new InExportExc("An Error occurred during Export",e);
             }
         });
 
@@ -693,7 +692,7 @@ public class FahrtenbuchUI extends Application {
                 try {
                     fahrtenbuch.exportFahrt();
                 } catch (IOException e) {
-                    throw new inExportExc("An Error occurred during Export",e);
+                    throw new InExportExc("An Error occurred during Export",e);
                 }
 
             } else if (dialogButton == deleteButtonType) {
@@ -712,7 +711,7 @@ public class FahrtenbuchUI extends Application {
                     try {
                         fahrtenbuch.exportFahrt();
                     } catch (IOException e) {
-                        throw new inExportExc("An Error occurred during Export",e);
+                        throw new InExportExc("An Error occurred during Export",e);
                     }
                 }
             }
@@ -737,7 +736,7 @@ public class FahrtenbuchUI extends Application {
             try {
                 fahrtenbuch.exportFahrt();
             } catch (IOException e) {
-                throw new inExportExc("An Error occurred during Export",e);
+                throw new InExportExc("An Error occurred during Export",e);
             }
         });
 
@@ -792,7 +791,7 @@ public class FahrtenbuchUI extends Application {
             try {
                 fahrtenbuch.exportManual(path);
             } catch (IOException e) {
-                throw new inExportExc("An Error occurred during Export",e);
+                throw new InExportExc("An Error occurred during Export",e);
             }
             }
         });
@@ -856,7 +855,7 @@ public class FahrtenbuchUI extends Application {
             try {
                 fahrtenbuch.exportFahrt();
             } catch (IOException e) {
-                throw new inExportExc("An Error occurred during Export",e);
+                throw new InExportExc("An Error occurred during Export",e);
             }
         });
     }
@@ -1078,7 +1077,7 @@ public class FahrtenbuchUI extends Application {
         Map<Integer, Map<String, Double>> data = fahrtenbuch.berechneKilometerProJahrUndKategorie();
 
         if (data.isEmpty()) {
-            System.out.println("Keine Daten für die Jahresstatistik vorhanden.");
+            LOGGER.info("Keine Daten für die Jahresstatistik vorhanden.");
         } else {
             TableView<Map.Entry<Integer, Map<String, Double>>> tableView = erstelleJahresKilometerTableView(kategorien);
             ObservableList<Map.Entry<Integer, Map<String, Double>>> tableData = FXCollections.observableArrayList(data.entrySet());
@@ -1191,8 +1190,8 @@ public class FahrtenbuchUI extends Application {
         result.ifPresent(filter -> { // Aktualisierte Fahrt in der Liste und in der TableView anzeigen
             fahrtenTabelle.refresh(); dialog.close(); }); }
 
-    public class inExportExc extends RuntimeException{
-        public inExportExc(String msg, Throwable cause){
+    public class InExportExc extends RuntimeException{
+        public InExportExc(String msg, Throwable cause){
             super(msg,cause);
         }
     }
