@@ -47,6 +47,7 @@ import java.time.YearMonth;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 
 public class FahrtenbuchUI extends Application {
@@ -1125,16 +1126,53 @@ public class FahrtenbuchUI extends Application {
     /**
      * Öffnet ein Dialogfenster zur Filterung von Fahrten nach verschiedenen Kriterien.
      *
-     * @param fahrtenTabelle Die TableView, die die gefilterten Fahrten anzeigen wird.
+     * @param  date
+     *
      */
-    void oeffneFilter(TableView fahrtenTabelle) {
-        // Dialogfenster für die Filterung erstellen
+    private List<Fahrt> filterFahrten(LocalDate date, List<String> selectedCategories, double avg, boolean avgUnder, boolean avgOver) {
+        List<Fahrt> filteredFahrten = fahrtenListe;
+
+        // Filter by date
+        if (date != null) {
+            filteredFahrten = filteredFahrten.stream()
+                    .filter(f -> f.getDatum().getYear() == date.getYear() &&
+                            f.getDatum().getMonth() == date.getMonth() &&
+                            f.getDatum().getDayOfMonth() == date.getDayOfMonth())
+                    .collect(Collectors.toList());
+        }
+
+        // Filter by selected categories
+        if (!selectedCategories.isEmpty()) {
+            filteredFahrten = filteredFahrten.stream()
+                    .filter(f -> f.getKategorien().containsAll(selectedCategories))
+                    .collect(Collectors.toList());
+        }
+
+        // Filter by average speed
+        if (avg >= 0.0) {
+            filteredFahrten = filteredFahrten.stream()
+                    .filter(f -> {
+                        double gefahreneKilometer = f.getGefahreneKilometer();
+                        LocalTime aktiveFahrzeit = f.getAktiveFahrzeit();
+                        double time = aktiveFahrzeit.getHour() + (aktiveFahrzeit.getMinute() / 60.0);
+                        double instanceAvg = gefahreneKilometer / time;
+
+                        return (!avgUnder || instanceAvg < avg)
+                                && (!avgOver || instanceAvg >= avg);
+                    })
+                    .collect(Collectors.toList());
+        }
+
+        return filteredFahrten;
+    }
+
+    private void oeffneFilter(TableView fahrtenTabelle) {
         Dialog<Boolean> dialog = new Dialog<>();
         dialog.setTitle("Fahrt filtern");
         ButtonType filterButtonType = new ButtonType("Filtern", ButtonBar.ButtonData.OK_DONE);
-        ButtonType filterAvgUnder = new ButtonType("FilternByVAvgUnder", ButtonBar.ButtonData.OK_DONE);
-        ButtonType filterAvgOver = new ButtonType("FilternByVAvgOver", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(filterButtonType,filterAvgUnder,filterAvgOver, ButtonType.CANCEL);
+        ButtonType resetButtonType = new ButtonType("Reset", ButtonBar.ButtonData.LEFT);
+        dialog.getDialogPane().getButtonTypes().addAll(filterButtonType, resetButtonType, ButtonType.CANCEL);
+        Label datumL = new Label("Datum");
         DatePicker datum = new DatePicker();
         datum.setPromptText("Datum der Fahrt");
         datum.getEditor().setDisable(true);
@@ -1143,82 +1181,67 @@ public class FahrtenbuchUI extends Application {
         TextField avgTF = new TextField();
         avgTF.setPromptText("avg V eingeben");
         avgTF.setMaxWidth(200);
-        Label categorylabel = new Label("Kategorie");
-        categorylabel.setMaxWidth(200);
+        Label categoryLabel = new Label("Kategorie");
+        categoryLabel.setMaxWidth(200);
 
-        //category filter
-        final CheckComboBox<String> categoryfilter = new CheckComboBox<>(fahrtenbuch.getKategorien(true));
-       ObservableList<Fahrt> fahrtenByCat = FXCollections.observableArrayList();
-        ObservableList<Fahrt> fahrtenByDate = FXCollections.observableArrayList();
+        final CheckComboBox<String> categoryFilter = new CheckComboBox<>(fahrtenbuch.getKategorien(true));
+        CheckBox avgUnderCheckBox = new CheckBox("Unterhalb des Durchschnitts");
+        CheckBox avgOverCheckBox = new CheckBox("Über oder gleich dem Durchschnitt");
 
-        // Ergebnis des Dialogs konvertieren, wenn der Benutzer "Filtern" klickt
+        HBox datumBox = new HBox(5);
+        datumBox.getChildren().addAll(datumL, datum);
+
+        HBox categoryBox = new HBox(5);
+        categoryBox.getChildren().addAll(categoryLabel, categoryFilter);
+
+        HBox avgBox = new HBox(5);
+        avgBox.getChildren().addAll(avgLabel, avgTF, avgUnderCheckBox, avgOverCheckBox);
+
+        VBox fahrtTextinputboxen = new VBox(10);
+        fahrtTextinputboxen.getChildren().addAll(datumBox, categoryBox, avgBox);
+
+        ScrollPane scrollPane = new ScrollPane(fahrtTextinputboxen);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setPrefHeight(400);
+
+        StackPane layoutFilter = new StackPane();
+        layoutFilter.getChildren().add(scrollPane);
+        dialog.getDialogPane().setContent(layoutFilter);
+
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == filterButtonType) {
                 try {
+                    LocalDate date = datum.getValue();
+                    List<String> selectedCategories = categoryFilter.getCheckModel().getCheckedItems().stream().toList();
+                    double avg = avgTF.getText().isEmpty() ? -1.0 : Double.parseDouble(avgTF.getText());
 
-                    if (!categoryfilter.getCheckModel().getCheckedIndices().isEmpty()|| datum.getValue() != null||!categoryfilter.getCheckModel().isEmpty()&& datum.getValue()!=null){
+                    List<Fahrt> filteredFahrten = filterFahrten(date, selectedCategories, avg, avgUnderCheckBox.isSelected(), avgOverCheckBox.isSelected());
 
-                        LocalDate date = datum.getValue();
-
-
-                        fahrtenByCat.addAll(fahrtenbuch.filterByKategorie(categoryfilter.getCheckModel().getCheckedItems().stream().toList()));
-
-
-
-                        fahrtenByDate.addAll(fahrtenByCat.stream().filter(fahrt -> fahrt.getDatum().isEqual(date)).toList());
-
-                        fahrtenTabelle.setItems(fahrtenByDate);
-
-                    } else fahrtenTabelle.setItems(fahrtenListe);
-                    //TODO kombiniere alle filter-items (führe sie zusammen?)
-
-
-                } catch (DateTimeParseException d) {
-                    Alert dateAlert = new Alert(Alert.AlertType.WARNING);
-                    dateAlert.setContentText("Wrong Format! use: DD:MM:YYYY or HH:MM..");
-                    dateAlert.showAndWait();
+                    fahrtenTabelle.setItems(FXCollections.observableArrayList(filteredFahrten));
+                } catch (DateTimeParseException | NumberFormatException e) {
+                    showAlert("Wrong Format!");
                 }
                 return true;
-                //show only speeds equal or under given input
-            } else if (dialogButton == filterAvgUnder) {
-                try{
-                    double avg = Double.parseDouble(avgTF.getText());
-                    fahrtenListe.clear();
-                    fahrtenListe.addAll(fahrtenbuch.filterByAvgVUnder(avg));
-                    fahrtenTabelle.setItems(this.fahrtenListe);
-                } catch (NumberFormatException n){
-                    Alert numberAlert = new Alert(Alert.AlertType.WARNING);
-                    numberAlert.setContentText("WrongFormat!");
-                    numberAlert.showAndWait();
-                }
-                return true;
-                //show only speeds equal or over given input
-            }else if (dialogButton == filterAvgOver) {
-                try{
-                    double avg = Double.parseDouble(avgTF.getText());
-                    fahrtenListe.clear();
-                    fahrtenListe.addAll(fahrtenbuch.filterByAvgVOver(avg));
-                    fahrtenTabelle.setItems(this.fahrtenListe);
-                } catch (NumberFormatException n){
-                    Alert numberAlert = new Alert(Alert.AlertType.WARNING);
-                    numberAlert.setContentText("WrongFormat!");
-                    numberAlert.showAndWait();
-                }
+            } else if (dialogButton == resetButtonType) {
+                // Reset button is pressed, clear filters and reset the table
+                fahrtenTabelle.setItems(FXCollections.observableArrayList(fahrtenListe));
                 return true;
             }
             return false;
         });
-        VBox fahrtTextinputboxen = new VBox(1);
-        fahrtTextinputboxen.getChildren().addAll(datum,avgLabel,avgTF,categorylabel,categoryfilter);
-        ScrollPane scrollPane = new ScrollPane(fahrtTextinputboxen);
-        scrollPane.setFitToWidth(true); // Passt die Breite der ScrollPane an die Breite der VBox an
-        scrollPane.setPrefHeight(400); // Setzen Sie eine bevorzugte Höhe
-        StackPane layoutFilter = new StackPane();
-        layoutFilter.getChildren().add(scrollPane);
-        dialog.getDialogPane().setContent(layoutFilter);
+
         Optional<Boolean> result = dialog.showAndWait();
-        result.ifPresent(filter -> { // Aktualisierte Fahrt in der Liste und in der TableView anzeigen
-            fahrtenTabelle.refresh(); dialog.close(); }); }
+        result.ifPresent(filter -> {
+            fahrtenTabelle.refresh();
+            dialog.close();
+        });
+    }
+
+    private void showAlert(String contentText) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setContentText(contentText);
+        alert.showAndWait();
+    }
 
     public class InExportExc extends RuntimeException{
         public InExportExc(String msg, Throwable cause){
