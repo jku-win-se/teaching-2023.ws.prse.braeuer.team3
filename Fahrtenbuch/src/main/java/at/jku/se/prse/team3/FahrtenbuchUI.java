@@ -117,7 +117,7 @@ public class FahrtenbuchUI extends Application {
 
 
         logoView.setOpacity(0);
-        primaryStage.initStyle(StageStyle.DECORATED);
+
         ProgressBar lol = new ProgressBar();
         lol.setStyle("-fx-accent: black;");
         lol.setMaxWidth(logo.getWidth());
