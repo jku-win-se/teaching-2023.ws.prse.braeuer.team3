@@ -117,12 +117,12 @@ public class FahrtenbuchUI extends Application {
 
 
         logoView.setOpacity(0);
-
-        ProgressBar lol = new ProgressBar();
-        lol.setStyle("-fx-accent: black;");
-        lol.setMaxWidth(logo.getWidth());
-        root.getChildren().addAll(logoView, lol);
-        StackPane.setAlignment(lol, Pos.BOTTOM_CENTER);
+       // primaryStage.initStyle(StageStyle.UNDECORATED);
+        ProgressBar progressBar = new ProgressBar();
+        progressBar.setStyle("-fx-accent: black;");
+        progressBar.setMaxWidth(logo.getWidth());
+        root.getChildren().addAll(logoView, progressBar);
+        StackPane.setAlignment(progressBar, Pos.BOTTOM_CENTER);
 
         // Create animation
         FadeTransition fadeTransition = new FadeTransition(Duration.seconds(2), logoView);
@@ -153,7 +153,7 @@ public class FahrtenbuchUI extends Application {
             }
         };
 
-        lol.progressProperty().bind(task.progressProperty());
+        progressBar.progressProperty().bind(task.progressProperty());
 
         Thread thread = new Thread(task);
         thread.setDaemon(true);
@@ -184,7 +184,7 @@ public class FahrtenbuchUI extends Application {
             logo=new WritableImage(100,100);
         }
 
-
+        primaryStage = new Stage(StageStyle.DECORATED);
         primaryStage.getIcons().add(logoFull);
         kategorienListe = fahrtenbuch.getKategorien(true);
         //start tabellerische Ansicht
