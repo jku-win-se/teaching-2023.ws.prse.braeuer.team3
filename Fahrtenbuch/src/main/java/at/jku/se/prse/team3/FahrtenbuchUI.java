@@ -183,8 +183,8 @@ public class FahrtenbuchUI extends Application {
         else {
             logo=new WritableImage(100,100);
         }
-
-        primaryStage = new Stage(StageStyle.DECORATED);
+        Stage modifiedStage=new Stage(StageStyle.DECORATED);
+        primaryStage = modifiedStage;
         primaryStage.getIcons().add(logoFull);
         kategorienListe = fahrtenbuch.getKategorien(true);
         //start tabellerische Ansicht
