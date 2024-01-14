@@ -210,6 +210,8 @@ public class FahrtenbuchUI extends Application {
         jahresStatistikButton.setOnAction(event -> zeigeJahresKilometerStatistik());
         filterButton = new Button("Filtern");
         filterButton.setOnAction(event -> oeffneFilter(fahrtenTabelle));
+        Button info = new Button("Info Page");
+        info.setOnAction(event ->openAboutPage());
 
         TableColumn<Fahrt, String> kfz = new TableColumn<>("KFZ-Kennzeichen");
         kfz.setCellValueFactory(new PropertyValueFactory<>("kfzKennzeichen"));
@@ -310,7 +312,7 @@ public class FahrtenbuchUI extends Application {
 
         // HBox für die Buttons erstellen
         HBox leftButtonBox = new HBox(10);
-        leftButtonBox.getChildren().addAll(newTripButton, setButton, newEditButton, statistikMenuButton, grafikMenuButton,filterButton);
+        leftButtonBox.getChildren().addAll(newTripButton, setButton, newEditButton, statistikMenuButton, grafikMenuButton,filterButton, info);
         leftButtonBox.setAlignment(Pos.TOP_LEFT);
         leftButtonBox.setPadding(new javafx.geometry.Insets(4, 1, 10, 1));
 
@@ -1247,6 +1249,48 @@ public class FahrtenbuchUI extends Application {
         public InExportExc(String msg, Throwable cause){
             super(msg,cause);
         }
+    }
+
+    private void openAboutPage() {
+        Stage aboutStage = new Stage();
+        aboutStage.initModality(Modality.APPLICATION_MODAL);
+        aboutStage.setTitle("About Page");
+
+        VBox aboutLayout = new VBox(10);
+
+        Label appInfo = new Label("Fahrtenbuch      Version: 0.3.0");
+
+        Label contributorsLabel = new Label("Contributors: \n1. Hannes Mayrhofer\n2. Markus Lindner\n3. Milan Keta\n4. Sara Kheribi");
+
+        Label professorLabel = new Label("Professor: Dr. Johannes Bräuer");
+
+        Label subjectLabel = new Label("LVA: Software Engineering PR");
+
+        Label universityLabel = new Label("Universität: JKU");
+
+        Label locationTime = new Label("Jänner 2023.           Linz,Austria");
+
+        Image logo;
+        InputStream imageStream = getClass().getResourceAsStream("/logo.png");
+
+        if (imageStream != null) {
+            logo = new Image(imageStream);
+        } else {
+            logo = new WritableImage(100, 100);
+        }
+
+        double targetWidth = 150;
+        double targetHeight = 100;
+        ImageView logoImageView = new ImageView(logo);
+        logoImageView.setFitWidth(targetWidth);
+        logoImageView.setFitHeight(targetHeight);
+
+        aboutLayout.getChildren().addAll(logoImageView, appInfo,contributorsLabel, professorLabel, subjectLabel, universityLabel, locationTime);
+        aboutLayout.setAlignment(Pos.CENTER);
+
+        Scene aboutScene = new Scene(aboutLayout, 300, 400);
+        aboutStage.setScene(aboutScene);
+        aboutStage.showAndWait();
     }
 
         }
