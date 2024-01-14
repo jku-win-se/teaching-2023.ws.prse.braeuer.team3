@@ -183,9 +183,10 @@ public class FahrtenbuchUI extends Application {
         else {
             logo=new WritableImage(100,100);
         }
-        Stage modifiedStage=new Stage(StageStyle.DECORATED);
-        primaryStage = modifiedStage;
-        primaryStage.getIcons().add(logoFull);
+        Stage overviewStage=new Stage(StageStyle.DECORATED);
+
+
+        overviewStage.getIcons().add(logoFull);
         kategorienListe = fahrtenbuch.getKategorien(true);
         //start tabellerische Ansicht
         // Laden der vorhandenen Fahrten aus dem Fahrtenbuch und Initialisierung der fahrtenListe
@@ -252,12 +253,12 @@ public class FahrtenbuchUI extends Application {
         fahrtenTabelle.getColumns().addAll(kfz, date, abf, ank, gefKM, aktivFZ, status, kateg,avgSpeed);
 
         //ende tabellarische ansicht
-        primaryStage.setTitle("Fahrtenbuch");
+        overviewStage.setTitle("Fahrtenbuch");
         setButton = new Button();
         setButton.setText("Settings");
         setButton.setId("settingsButton");
 
-        Stage finalPrimaryStage = primaryStage;
+        Stage finalPrimaryStage = overviewStage;
         setButton.setOnAction(actionEvent -> {
             switchToSettings(finalPrimaryStage);
 
@@ -268,7 +269,7 @@ public class FahrtenbuchUI extends Application {
         newEditButton.setText("Fahrt bearbeiten");
         newEditButton.setId("editButton");
 
-        Stage finalPrimaryStage1 = primaryStage;
+        Stage finalPrimaryStage1 = overviewStage;
         newEditButton.setOnAction(event -> {
             Fahrt ausgewaehlteFahrt = fahrtenTabelle.getSelectionModel().getSelectedItem();
             if (ausgewaehlteFahrt != null) {
@@ -302,7 +303,7 @@ public class FahrtenbuchUI extends Application {
         newTripButton.setText("Neue Fahrt");
         newTripButton.setId("newTripButton");
         newTripButton.setStyle("-fx-background-colour: #00ff00");
-        Stage finalPrimaryStage2 = primaryStage;
+        Stage finalPrimaryStage2 = overviewStage;
         newTripButton.setOnAction(actionEvent -> neueFahrt(finalPrimaryStage2));
 
         // HBox für die Buttons erstellen
@@ -330,16 +331,16 @@ public class FahrtenbuchUI extends Application {
 
         Scene fahrten = new Scene(root, 720, 400);
 
-        primaryStage.setScene(fahrten);
+        overviewStage.setScene(fahrten);
 
 
         FadeTransition fadeTransition = new FadeTransition(Duration.seconds(1), root);
         fadeTransition.setFromValue(0);
         fadeTransition.setToValue(1);
         fadeTransition.play();
-        primaryStage.show();
+        overviewStage.show();
         //when closing this stage data will be saved to csv
-        primaryStage.setOnCloseRequest(windowEvent -> {
+        overviewStage.setOnCloseRequest(windowEvent -> {
             try {
                 fahrtenbuch.exportFahrt();
             } catch (IOException e) {
