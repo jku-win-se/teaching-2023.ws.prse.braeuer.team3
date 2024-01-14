@@ -56,4 +56,32 @@ public class FahrtenbuchTest {
         assertEquals("Anzahl der importierten Fahrten soll 1 sein", 1, fahrtenbuch.listeFahrten().size());
     }
 
+    @Test
+    public void testFilterByAvgVUnder_WithNegativeAvg_ShouldReturnOriginalList() throws IOException {
+        fahrtenbuch.neueFahrt("avg33",LocalDate.now(),LocalTime.of(05,05),LocalTime.of(06,05),33.0, LocalTime.of(01,00),FahrtStatus.ABSOLVIERT,Arrays.asList("Geschäftlich"));
+        assertEquals(1, fahrtenbuch.filterByAvgVUnder(-1.0).size());
+    }
+
+    @Test
+    public void testFilterByAvgVUnder_WithValidAvg_ShouldReturnFilteredList() throws IOException {
+        fahrtenbuch.neueFahrt("avg100",LocalDate.now(),LocalTime.of(05,05),LocalTime.of(06,05),100.0, LocalTime.of(01,00),FahrtStatus.ABSOLVIERT,Arrays.asList("Geschäftlich"));
+        fahrtenbuch.neueFahrt("avg33",LocalDate.now(),LocalTime.of(05,05),LocalTime.of(06,05),33.0, LocalTime.of(01,00),FahrtStatus.ABSOLVIERT,Arrays.asList("Geschäftlich"));
+        assertEquals(1, fahrtenbuch.filterByAvgVUnder(50.0).size());
+    }
+
+    @Test
+    public void testFilterByAvgVOver_WithNegativeAvg_ShouldReturnOriginalList() throws IOException{
+        fahrtenbuch.neueFahrt("avg100",LocalDate.now(),LocalTime.of(05,05),LocalTime.of(06,05),100.0, LocalTime.of(01,00),FahrtStatus.ABSOLVIERT,Arrays.asList("Geschäftlich"));
+        assertEquals(1, fahrtenbuch.filterByAvgVOver(-1.0).size());
+    }
+
+    @Test
+    public void testFilterByAvgVOver_WithValidAvg_ShouldReturnFilteredList() throws IOException{
+        fahrtenbuch.neueFahrt("avg100",LocalDate.now(),LocalTime.of(05,05),LocalTime.of(06,05),100.0, LocalTime.of(01,00),FahrtStatus.ABSOLVIERT,Arrays.asList("Geschäftlich"));
+        fahrtenbuch.neueFahrt("avg33",LocalDate.now(),LocalTime.of(05,05),LocalTime.of(06,05),33.0, LocalTime.of(01,00),FahrtStatus.ABSOLVIERT,Arrays.asList("Geschäftlich"));
+        assertEquals(1, fahrtenbuch.filterByAvgVOver(50.0).size());
+    }
+
+
+
 }
