@@ -1,4 +1,5 @@
 package at.jku.se.prse.team3;
+import java.nio.file.Paths;
 import java.util.logging.Logger;
 
 import javafx.animation.FadeTransition;
@@ -828,11 +829,37 @@ public class FahrtenbuchUI extends Application {
         VBox kategorieInp = new VBox();
         kategorieInp.getChildren().addAll(kategorienInput, kategorieHinzufuegenButton);
 
+        Label tokenLabel = new Label("Enter Dropbox Access Token:");
+        TextField tokenTextField = new TextField();
+        tokenTextField.setStyle("-fx-text-fill: grey;");
+        Button uploadButton = new Button("Upload to Dropbox");
+
+        tokenLabel.setAlignment(Pos.CENTER_LEFT); // Align the label to the left
+        GridPane.setConstraints(tokenLabel, 0, 0);
+
+        tokenTextField.setAlignment(Pos.CENTER_LEFT); // Align the text field to the left
+        GridPane.setConstraints(tokenTextField, 1, 0);
+
+        uploadButton.setAlignment(Pos.CENTER_LEFT); // Align the button to the left
+        GridPane.setConstraints(uploadButton, 2, 0);
+
+
+        uploadButton.setOnAction(event -> {
+            String accessToken = tokenTextField.getText();
+            Path path1 = Paths.get(System.getProperty("user.home"), "Documents", "Fahrtenbuch 0.0.3", "fahrten.csv");
+            String fahrtenIn = path1.toString();
+            Path path2 = Paths.get(System.getProperty("user.home"), "Documents", "Fahrtenbuch 0.0.3", "Kategorien.csv");
+            String kategorienIn = path2.toString();
+            String cloudPathFahrten = "/Apps/SEPR_Team_3/fahrten.csv";
+            String cloudPathKategorien = "/Apps/SEPR_Team_3/kategorien.csv";
+            CloudBackup.uploadDB(fahrtenIn, cloudPathFahrten, accessToken);
+            CloudBackup.uploadDB(kategorienIn, cloudPathKategorien, accessToken);
+        });
 
         primaryStage.setTitle("Einstellungen");
         GridPane gridSettings = new GridPane();
 
-        gridSettings.getChildren().addAll(exportButton, backButton, pfad, angezeigteKategorien, kategorieInp);
+        gridSettings.getChildren().addAll(exportButton, backButton, pfad, angezeigteKategorien, kategorieInp,tokenLabel,tokenTextField,uploadButton);
 
         gridSettings.setAlignment(Pos.CENTER);
         GridPane.setConstraints(backButton, 0, 5);
@@ -845,6 +872,8 @@ public class FahrtenbuchUI extends Application {
 
 
         gridSettings.requestFocus();
+
+
 
 
         Scene einstellungen = new Scene(gridSettings, 720, 400);
