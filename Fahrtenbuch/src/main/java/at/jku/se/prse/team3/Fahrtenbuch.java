@@ -329,7 +329,7 @@ public class Fahrtenbuch {
 
 
             } catch (IOException | CsvValidationException e) {
-                throw new RuntimeException("An unexpected Error occured during Import");
+                throw new inExportExc("An unexpected Error occured during Import",e);
             }
 
             try (CSVReader reader2 = new CSVReader(new FileReader(importKategorien.toFile()))) {
@@ -340,14 +340,14 @@ public class Fahrtenbuch {
                     }
                 }
             } catch (CsvException | FileNotFoundException e) {
-                throw new RuntimeException("An Error occured during Import");
+                throw new inExportExc("An Error occured during Import",e);
             } catch (IOException e) {
-                throw new RuntimeException("An unexpected Error occured during Import");
+                throw new inExportExc("An unexpected Error occured during Import",e);
             }
 
 
         } catch (IOException e) {
-            throw new RuntimeException("An unexpected Error occured during Import");
+            throw new inExportExc("An unexpected Error occured during Import",e);
         }
 
     }
@@ -530,5 +530,10 @@ public class Fahrtenbuch {
                     .collect(Collectors.toList()));
         }
         return gefilterteFahrten;
+    }
+    public class inExportExc extends RuntimeException{
+        public inExportExc(String msg, Throwable cause){
+            super(msg,cause);
+        }
     }
 }

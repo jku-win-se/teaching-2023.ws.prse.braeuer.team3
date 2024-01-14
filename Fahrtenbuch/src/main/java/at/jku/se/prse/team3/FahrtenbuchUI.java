@@ -344,7 +344,7 @@ public class FahrtenbuchUI extends Application {
             try {
                 fahrtenbuch.exportFahrt();
             } catch (IOException e) {
-                throw new RuntimeException("An unexpected Error occured during Export");
+                throw new inExportExc("An Error occurred during Export",e);
             }
         });
     }
@@ -582,7 +582,7 @@ public class FahrtenbuchUI extends Application {
             try {
                 fahrtenbuch.exportFahrt();
             } catch (IOException e) {
-                throw new RuntimeException("An unexpected Error occured during Export");
+                throw new inExportExc("An Error occurred during Export",e);
             }
         });
 
@@ -693,7 +693,7 @@ public class FahrtenbuchUI extends Application {
                 try {
                     fahrtenbuch.exportFahrt();
                 } catch (IOException e) {
-                    throw new RuntimeException("An unexpected Error occured during Export");
+                    throw new inExportExc("An Error occurred during Export",e);
                 }
 
             } else if (dialogButton == deleteButtonType) {
@@ -712,7 +712,7 @@ public class FahrtenbuchUI extends Application {
                     try {
                         fahrtenbuch.exportFahrt();
                     } catch (IOException e) {
-                        throw new RuntimeException("An unexpected Error occured during Export");
+                        throw new inExportExc("An Error occurred during Export",e);
                     }
                 }
             }
@@ -737,7 +737,7 @@ public class FahrtenbuchUI extends Application {
             try {
                 fahrtenbuch.exportFahrt();
             } catch (IOException e) {
-                throw new RuntimeException("An unexpected Error occured during Export");
+                throw new inExportExc("An Error occurred during Export",e);
             }
         });
 
@@ -792,7 +792,7 @@ public class FahrtenbuchUI extends Application {
             try {
                 fahrtenbuch.exportManual(path);
             } catch (IOException e) {
-                throw new RuntimeException("An Error occured during Export");
+                throw new inExportExc("An Error occurred during Export",e);
             }
             }
         });
@@ -856,7 +856,7 @@ public class FahrtenbuchUI extends Application {
             try {
                 fahrtenbuch.exportFahrt();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new inExportExc("An Error occurred during Export",e);
             }
         });
     }
@@ -1190,5 +1190,11 @@ public class FahrtenbuchUI extends Application {
         Optional<Boolean> result = dialog.showAndWait();
         result.ifPresent(filter -> { // Aktualisierte Fahrt in der Liste und in der TableView anzeigen
             fahrtenTabelle.refresh(); dialog.close(); }); }
+
+    public class inExportExc extends RuntimeException{
+        public inExportExc(String msg, Throwable cause){
+            super(msg,cause);
+        }
+    }
 
         }
