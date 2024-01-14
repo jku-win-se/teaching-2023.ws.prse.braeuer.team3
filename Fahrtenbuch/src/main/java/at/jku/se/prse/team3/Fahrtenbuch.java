@@ -329,7 +329,7 @@ public class Fahrtenbuch {
 
 
             } catch (IOException | CsvValidationException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("An unexpected Error occured during Import");
             }
 
             try (CSVReader reader2 = new CSVReader(new FileReader(importKategorien.toFile()))) {
@@ -340,14 +340,14 @@ public class Fahrtenbuch {
                     }
                 }
             } catch (CsvException | FileNotFoundException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("An Error occured during Import");
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("An unexpected Error occured during Import");
             }
 
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("An unexpected Error occured during Import");
         }
 
     }

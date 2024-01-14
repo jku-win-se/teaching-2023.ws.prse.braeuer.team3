@@ -344,7 +344,7 @@ public class FahrtenbuchUI extends Application {
             try {
                 fahrtenbuch.exportFahrt();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("An unexpected Error occured during Export");
             }
         });
     }
@@ -582,7 +582,7 @@ public class FahrtenbuchUI extends Application {
             try {
                 fahrtenbuch.exportFahrt();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("An unexpected Error occured during Export");
             }
         });
 
@@ -693,7 +693,7 @@ public class FahrtenbuchUI extends Application {
                 try {
                     fahrtenbuch.exportFahrt();
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    throw new RuntimeException("An unexpected Error occured during Export");
                 }
 
             } else if (dialogButton == deleteButtonType) {
@@ -712,7 +712,7 @@ public class FahrtenbuchUI extends Application {
                     try {
                         fahrtenbuch.exportFahrt();
                     } catch (IOException e) {
-                        throw new RuntimeException(e);
+                        throw new RuntimeException("An unexpected Error occured during Export");
                     }
                 }
             }
@@ -737,7 +737,7 @@ public class FahrtenbuchUI extends Application {
             try {
                 fahrtenbuch.exportFahrt();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("An unexpected Error occured during Export");
             }
         });
 
@@ -792,7 +792,7 @@ public class FahrtenbuchUI extends Application {
             try {
                 fahrtenbuch.exportManual(path);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("An Error occured during Export");
             }
             }
         });
