@@ -12,8 +12,7 @@ Hannes Mayrhofer, Markus Lindner, Sara Kheribi, Milan Keta
 
 
 
-1.
-# Einleitung
+# 1. Einleitung
 
 ## Architektur der Applikation
 
