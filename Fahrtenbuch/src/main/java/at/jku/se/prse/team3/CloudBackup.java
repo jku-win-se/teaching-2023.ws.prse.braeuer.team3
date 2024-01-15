@@ -15,14 +15,31 @@ public class CloudBackup {
 
     private static final String CLIENT_IDENTIFIER = "wk400vxjbjtryt0";
 
+    //Custom exception for Dropbox upload errors because of the pmd checks
+
+    public static class DropboxUploadException extends RuntimeException {
+        public DropboxUploadException(String message, Throwable cause) {
+            super(message, cause);
+        }
+    }
+
+    public static class FileUploadException extends RuntimeException {
+        public FileUploadException(String message, Throwable cause) {
+            super(message, cause);
+        }
+    }
+
     /**
      * Exportiert Datein in ein Dropbox Cloud Ordner. Issue 35.
      *
-     * @param localPath Pfad wo lokale Daten lokal gespeichert sind.
-     * @param cloudPath Cloudpfad wo die Daten gespeichert werden.
+     * @param localPath   Pfad wo lokale Daten lokal gespeichert sind.
+     * @param cloudPath   Cloudpfad wo die Daten gespeichert werden.
      * @param accessToken Access Token um Transaktion zu authorisieren, jede 4 Stunden wird neue gebraucht.
+     * @throws DropboxUploadException if an error occurs during Dropbox upload
+     * @throws FileUploadException    if an error occurs during file upload
      */
-    public static void uploadDB(String localPath, String cloudPath, String accessToken) {
+    public static void uploadDB(String localPath, String cloudPath, String accessToken)
+            throws DropboxUploadException, FileUploadException {
         try (InputStream in = new FileInputStream(localPath)) {
             DbxRequestConfig config = DbxRequestConfig.newBuilder(CLIENT_IDENTIFIER).build();
             DbxClientV2 client = new DbxClientV2(config, accessToken);
@@ -31,15 +48,19 @@ public class CloudBackup {
                     .withMode(WriteMode.OVERWRITE)
                     .build();
 
-            FileMetadata metadata = client.files().uploadBuilder(cloudPath)
-                    .withMode(WriteMode.OVERWRITE)
-                    .uploadAndFinish(in);
+            try {
+                FileMetadata metadata = client.files().uploadBuilder(cloudPath)
+                        .withMode(WriteMode.OVERWRITE)
+                        .uploadAndFinish(in);
 
-            System.out.println("File uploaded to Dropbox: " + metadata.getName());
-        } catch (IOException | UploadErrorException e) {
-            e.printStackTrace();
-        } catch (DbxException e) {
-            throw new RuntimeException(e);
+                System.out.println("File uploaded to Dropbox: " + metadata.getName());
+            } catch (UploadErrorException e) {
+                throw new DropboxUploadException("Error uploading file to Dropbox", e);
+            } catch (DbxException e) {
+                throw new DropboxUploadException("Dropbox error", e);
+            }
+        } catch (IOException e) {
+            throw new FileUploadException("Error handling file operations", e);
         }
     }
 }
