@@ -147,7 +147,6 @@ public class Fahrt {
         for(int i=0; i<kategorien.size()-1; i++){
             if(kategorien.get(i).equals(oldKategorie)){
                 kategorien.set(i,newKategorie);
-                System.out.println("Changing kategorie name from "+oldKategorie+" to "+newKategorie);
             }
         }
     }
