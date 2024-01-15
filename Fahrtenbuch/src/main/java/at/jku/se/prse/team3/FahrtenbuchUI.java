@@ -888,8 +888,16 @@ public class FahrtenbuchUI extends Application {
             String kategorienIn = path2.toString();
             String cloudPathFahrten = "/Apps/SEPR_Team_3/fahrten.csv";
             String cloudPathKategorien = "/Apps/SEPR_Team_3/kategorien.csv";
-            CloudBackup.uploadDB(fahrtenIn, cloudPathFahrten, accessToken);
-            CloudBackup.uploadDB(kategorienIn, cloudPathKategorien, accessToken);
+            try {
+                CloudBackup.uploadDB(fahrtenIn, cloudPathFahrten, accessToken);
+            } catch (CloudBackup.FileUploadException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                CloudBackup.uploadDB(kategorienIn, cloudPathKategorien, accessToken);
+            } catch (CloudBackup.FileUploadException e) {
+                throw new RuntimeException(e);
+            }
         });
 
         primaryStage.setTitle("Einstellungen");
