@@ -106,6 +106,25 @@ public class Fahrtenbuch {
         kategorien.add(kategorie);
     }
 
+    public boolean deleteKategorie(String kategorie){
+        boolean found = false;
+        for(Fahrt f:fahrten){
+            if(f.hasKategorie(kategorie)){
+                found = true;
+            }
+        }
+
+        if(found){
+            System.out.println("Kann Kategorie "+ kategorie + " nicht löschen, da sie in einer Fahrt verwendet wird.");
+            return false;
+        }else{
+            return this.kategorien.remove(kategorie);
+        }
+    }
+
+    public void renameKategorie(int index, String newName){
+        kategorien.set(index, newName);
+    }
     /**
      * Fahrt löschen
      *

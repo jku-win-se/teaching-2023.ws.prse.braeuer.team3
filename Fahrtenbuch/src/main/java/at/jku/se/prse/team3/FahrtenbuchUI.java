@@ -14,6 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 
 
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -23,6 +24,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
@@ -31,6 +33,7 @@ import javafx.scene.layout.*;
 import javafx.scene.shape.Box;
 import javafx.stage.*;
 import javafx.util.Duration;
+import javafx.util.StringConverter;
 import javafx.util.converter.*;
 import org.controlsfx.control.CheckComboBox;
 
@@ -763,12 +766,7 @@ public class FahrtenbuchUI extends Application {
      */
     private void switchToSettings(Stage primaryStage) {
         ObservableList<String> addedCategories = FXCollections.observableArrayList();
-        backButton = new Button();
-        backButton.setText("<- Zurück");
-        backButton.setOnAction(actionEvent -> {
-            overview(primaryStage);
-            primaryStage.hide();
-        });
+
         DirectoryChooser enterSavePath= new DirectoryChooser();
         enterSavePath.titleProperty().set("Path");
         enterSavePath.setInitialDirectory(new File(System.getProperty("user.home")));
@@ -792,7 +790,6 @@ public class FahrtenbuchUI extends Application {
             if (selectedFile != null) {
                 Path path= Path.of(selectedFile.getAbsolutePath());
 
-
             try {
                 fahrtenbuch.exportManual(path);
             } catch (IOException e) {
@@ -801,19 +798,44 @@ public class FahrtenbuchUI extends Application {
             }
         });
 
-
         TextField kategorienInput = new TextField();
         kategorienInput.setPromptText("Kategorien eingeben:");
         kategorienInput.setMaxWidth(200);
         kategorienListe.clear();
         kategorienListe.addAll(fahrtenbuch.getKategorien(true));
 
+        HBox angezeigteKategorien = new HBox();
+        angezeigteKategorien.setSpacing(10);
 
-        ListView angezeigteKategorien = new ListView();
-        angezeigteKategorien.setItems(kategorienListe);
-        angezeigteKategorien.setEditable(false);
+        ObservableList<String> items = FXCollections.observableArrayList(kategorienListe);
+        ListView<String> angezeigteKategorienList = new ListView<>(items);
         // Anfangs nicht sichtbar machen
-        angezeigteKategorien.setPrefHeight(50); // Höhe der TextArea anpassen
+        angezeigteKategorien.setPrefHeight(70); // Höhe der TextArea anpassen
+        angezeigteKategorienList.setEditable(true);
+        angezeigteKategorienList.setCellFactory(TextFieldListCell.forListView());
+        angezeigteKategorienList.setOnEditCommit(new EventHandler<ListView.EditEvent<String>>() {
+            @Override
+            public void handle(ListView.EditEvent<String> t) {
+                angezeigteKategorienList.getItems().set(t.getIndex(), t.getNewValue());
+                fahrtenbuch.renameKategorie(t.getIndex(),t.getNewValue());
+                kategorienListe.clear();
+                kategorienListe = fahrtenbuch.getKategorien(true);
+                angezeigteKategorienList.setVisible(true); // TextArea sichtbar machen
+                angezeigteKategorienList.refresh();
+            }
+        });
+
+        Button deleteBtn = new Button("Delete");
+        deleteBtn.setOnAction(actionEvent -> {
+            var deleted= fahrtenbuch.deleteKategorie((String) angezeigteKategorienList.getSelectionModel().getSelectedItem());
+            if(deleted){
+                this.kategorienListe.clear();
+                this.kategorienListe = fahrtenbuch.getKategorien(true);
+                angezeigteKategorienList.setVisible(true); // TextArea sichtbar machen
+                angezeigteKategorienList.refresh();
+            }
+        });
+        angezeigteKategorien.getChildren().addAll(angezeigteKategorienList,deleteBtn);
 
         Button kategorieHinzufuegenButton = new Button("Kategorie hinzufügen");
         kategorieHinzufuegenButton.setOnAction(event -> {
@@ -821,12 +843,10 @@ public class FahrtenbuchUI extends Application {
             if (!kategorie.isEmpty()) {
                 addToKategories(kategorie, kategorienListe::add); // Füge die Kategorie zur Liste hinzu
                 addToKategories(kategorie, addedCategories::add);
-                angezeigteKategorien.setVisible(true); // TextArea sichtbar machen
-                angezeigteKategorien.refresh();// Kategorie zur TextArea hinzufügen
+                angezeigteKategorienList.setVisible(true); // TextArea sichtbar machen
+                angezeigteKategorienList.refresh();// Kategorie zur TextArea hinzufügen
                 kategorienInput.clear(); // Eingabefeld leeren
-
                 fahrtenbuch.addKategories(addedCategories);
-
             }
         });
         VBox kategorieInp = new VBox();
@@ -837,6 +857,13 @@ public class FahrtenbuchUI extends Application {
         TextField tokenTextField = new TextField();
         tokenTextField.setStyle("-fx-text-fill: grey;");
         Button uploadButton = new Button("Upload to Dropbox");
+
+        backButton = new Button();
+        backButton.setText("<- Zurück");
+        backButton.setOnAction(actionEvent -> {
+            overview(primaryStage);
+            primaryStage.hide();
+        });
 
         tokenLabel.setAlignment(Pos.CENTER_LEFT); // Align the label to the left
         GridPane.setConstraints(tokenLabel, 0, 0);
