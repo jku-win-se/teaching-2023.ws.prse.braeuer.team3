@@ -54,7 +54,8 @@ Hannes Mayrhofer, Markus Lindner, Sara Kheribi, Milan Keta
 - **Kategorienverwaltung:** Benutzer können Kategorien hinzufügen, bearbeiten oder entfernen. Dies ermöglicht eine individuelle Anpassung der Kategorisierung von Fahrten.
 - **Anpassung von Einstellungen:** Es können Einstellungen wie den Speicherpfad für den Export angepasst werden, was zusätzliche Flexibilität bietet.
 
-# ![](RackMultipart20240115-1-t30wjj_html_46efa6ba88bf6e06.png)3. Überblick über das System aus Entwicklersicht
+# Überblick über das System aus Entwicklersicht
+![](umldiagramm.png)
 
 ##
 
@@ -62,20 +63,19 @@ Hannes Mayrhofer, Markus Lindner, Sara Kheribi, Milan Keta
 ##
 
 
-##
 
-
-##
 
 
 # 4. Sonarcloud & PMD
 
 **Sonarcloud:**
 
-![](RackMultipart20240115-1-t30wjj_html_a6b7ca8be86de7ab.png)
+![](sonarcloud.png)
 
 PMD\_
 
+![](pmd.png)
+![](pmd2.png)
 # JavaDoc für wichtige Klassen, Interfaces und Methoden
 
 ## Klasse FahrtenbuchUI:
