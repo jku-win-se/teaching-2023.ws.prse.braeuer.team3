@@ -385,7 +385,6 @@ public class FahrtenbuchUI extends Application {
         abfahrtsZeit.setMaxWidth(200);
         abfahrtsZeit.setTextFormatter(new TextFormatter<>(new TimeStringConverter("HH:mm")));
 
-
         TextField ankunftsZeit = new TextField();
         ankunftsZeit.setPromptText("Ankunftszeit im Format HH:MM");
         ankunftsZeit.setMaxWidth(200);
@@ -420,21 +419,19 @@ public class FahrtenbuchUI extends Application {
         angezeigteKategorien.setVisible(false); // Anfangs nicht sichtbar machen
         angezeigteKategorien.setPrefHeight(50); // Höhe der TextArea anpassen
 
-
 // Füge die Kategorien-Komponenten zur Benutzeroberfläche hinzu
         VBox kategorienBox = new VBox(10);
+        kategorienBox.setSpacing(4);
         kategorienBox.getChildren().addAll(kategorienInput, angezeigteKategorien);
 
         DatePicker future = new DatePicker();
         future.getEditor().setDisable(true);
         future.setPromptText("Zukünftige Fahrten");
 
-
         TextArea selectedDates = new TextArea();
         selectedDates.setDisable(true);
         selectedDates.setVisible(false);
         selectedDates.setPrefWidth(84);
-
 
         future.setOnAction(event -> {
             LocalDate date = future.getValue();
@@ -447,6 +444,7 @@ public class FahrtenbuchUI extends Application {
         selectedDates.setPrefHeight(20);
 
         HBox futureDatesBox = new HBox(10);
+        futureDatesBox.setSpacing(5);
         futureDatesBox.getChildren().addAll(future, selectedDates);
 
         futureDatesBox.setVisible(false);
@@ -483,10 +481,10 @@ public class FahrtenbuchUI extends Application {
         box.setVisible(true);
 
         VBox fahrtTextinputboxen = new VBox(1);
+        fahrtTextinputboxen.setSpacing(4);
         fahrtTextinputboxen.getChildren().addAll(box, kfzKennzeichen, datum, abfahrtsZeit, ankunftsZeit,
                 gefahreneKilometer, aktiveFahrzeit, fahrtstatus, futureDatesBox, kategorienBox
         );
-
 
         backButton = new Button();
         backButton.setText("<- Zurück");
@@ -497,10 +495,11 @@ public class FahrtenbuchUI extends Application {
         ScrollPane scrollPane = new ScrollPane(fahrtTextinputboxen);
         scrollPane.setFitToWidth(true); // Passt die Breite der ScrollPane an die Breite der VBox an
         scrollPane.setPrefHeight(400); // Setzen Sie eine bevorzugte Höhe
-
+        scrollPane.setPadding(new Insets(10,10,10,10));
         Label info = new Label("    Fahrtinformartionen unten eingeben");
         primaryStage.setTitle("Neue Fahrt");
         StackPane layoutNewTrip = new StackPane();
+        //layoutNewTrip.setPadding(new Insets(10,10,10,10));
         layoutNewTrip.getChildren().add(scrollPane);
         backButton = new Button("<- Zurück");
         backButton.setOnAction(event -> {
@@ -574,7 +573,6 @@ public class FahrtenbuchUI extends Application {
             fahrtenListe.clear();
             fahrtenListe.addAll(fahrtenbuch.listeFahrten());
         });
-
 
         StackPane.setAlignment(speichernButton, Pos.BOTTOM_RIGHT);
         StackPane.setAlignment(backButton, Pos.BOTTOM_LEFT);
