@@ -26,10 +26,11 @@ import java.time.LocalTime;
 import java.time.YearMonth;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Fahrtenbuch {
 
-    private List<String> kategorien;
+    private List<Kategorie> kategorien;
     private List<Fahrt> fahrten;
 
     /**
@@ -38,7 +39,7 @@ public class Fahrtenbuch {
      * @param kategorien List of available Categories
      * @param fahrten    List of available Driving records
      */
-    public Fahrtenbuch(List<String> kategorien, List<Fahrt> fahrten) {
+    public Fahrtenbuch(List<Kategorie> kategorien, List<Fahrt> fahrten) {
         this.kategorien = new ArrayList<>(kategorien);
         this.fahrten = new ArrayList<>(fahrten);
     }
@@ -61,14 +62,14 @@ public class Fahrtenbuch {
      * @param neueGefahreneKilometer neueGefahreneKilometer
      * @param neueAktiveFahrzeit     neueAktiveFahrzeit
      * @param fahrtStatus            fahrtStatus
-     * @param category               category
+     * @param kategorien             kategorien
      * @throws IOException
      */
 
     public void neueFahrt(String kfzKennzeichen, LocalDate datum, LocalTime abfahrtszeit,
                           LocalTime neueAnkunftszeit, Double neueGefahreneKilometer,
-                          LocalTime neueAktiveFahrzeit, FahrtStatus fahrtStatus, List<String> category) throws IOException {
-        fahrten.add(new Fahrt(kfzKennzeichen, datum, abfahrtszeit, neueAnkunftszeit, neueGefahreneKilometer, neueAktiveFahrzeit, category, fahrtStatus));
+                          LocalTime neueAktiveFahrzeit, FahrtStatus fahrtStatus, List<Kategorie> kategorien) throws IOException {
+        fahrten.add(new Fahrt(kfzKennzeichen, datum, abfahrtszeit, neueAnkunftszeit, neueGefahreneKilometer, neueAktiveFahrzeit, kategorien, fahrtStatus));
 
     }
 
@@ -109,7 +110,19 @@ public class Fahrtenbuch {
      * @param kategorie
      */
     public void addKategorie(String kategorie) {
-        kategorien.add(kategorie);
+        if(this.kategorien.stream().anyMatch(k -> k.getName().equals(kategorie))){
+            System.out.println("Kategorie "+ kategorie+" existiert bereits!");
+            return;
+        }
+        kategorien.add(new Kategorie(kategorie));
+    }
+
+    public void updateKategorie(Kategorie kategorie) {
+        Kategorie kat = this.kategorien.stream().filter(k -> k.getName().equals(kategorie.getName())).findFirst().orElse(null);
+        if(kat != null){
+            kat.setName(kategorie.getName());
+        }
+        System.out.println("Kategorien aktualisiert:"+this.kategorien.toString());
     }
 
     /**
@@ -140,7 +153,7 @@ public class Fahrtenbuch {
     public void planeZukuenftigeFahrten(List<LocalDate> reoccurances,
                                         String kfzKennzeichen,
                                         LocalTime abfahrtszeit,
-                                        List<String> fahrtKategorie) throws IOException {
+                                        List<Kategorie> fahrtKategorie) throws IOException {
 
         for (LocalDate d : reoccurances
         ) {
@@ -229,15 +242,15 @@ public class Fahrtenbuch {
                     String.valueOf(f.getGefahreneKilometer()),
                     String.valueOf(f.getAktiveFahrzeit()),
                     String.valueOf(f.getFahrtstatus()),
-                    f.getKategorien().toString().replace("[", "").replace("]", "")};
+                    f.getKategorieNames().toString().replace("[", "").replace("]", "")};
 
             csvWriter.writeNext(data);
         }
         csvWriter.close();
         CSVWriter csvWriter2 = new CSVWriter(new FileWriter(exportKategorien));
-        for (String k : kategorien
+        for (Kategorie k : kategorien
         ) {
-            String[] data = {k};
+            String[] data = {k.getName()};
             csvWriter2.writeNext(data);
         }
 
@@ -278,7 +291,7 @@ public class Fahrtenbuch {
             LocalTime ankunftszeit;
             Double gefahreneKilometer;
             LocalTime aktiveFahrzeit;
-            List<String> kategorien;
+            List<Kategorie> kategorien;
             FahrtStatus fahrtstatus;
 
 
@@ -302,7 +315,7 @@ public class Fahrtenbuch {
                     if (FahrtStatus.ZUKUENFTIG.toString().equals(data[6])) fahrtstatus = FahrtStatus.ZUKUENFTIG;
                     else if (FahrtStatus.ABSOLVIERT.toString().equals(data[6])) fahrtstatus = FahrtStatus.ABSOLVIERT;
                     else fahrtstatus = FahrtStatus.AUF_FAHRT;
-                    kategorien = Arrays.asList(data[7]);
+                    kategorien = Stream.of(data[7]).map(s -> new Kategorie(s)).toList();
                     neueFahrt(kFZKennzeichen, datum, abfahrtszeit, ankunftszeit, gefahreneKilometer, aktiveFahrzeit, fahrtstatus, kategorien);
 
                 }
@@ -316,7 +329,7 @@ public class Fahrtenbuch {
                 List<String[]> allKat = reader2.readAll();
                 for (String[] d : allKat) {
                     for (String cat : d) {
-                        this.kategorien.add(cat.trim());
+                        this.kategorien.add(new Kategorie(cat.trim()));
                     }
                 }
             } catch (CsvException e) {
@@ -353,7 +366,7 @@ public class Fahrtenbuch {
 
         for (Fahrt fahrt : fahrten) {
             YearMonth yearMonth = YearMonth.from(fahrt.getDatum());
-            List<String> fahrtKategorien = fahrt.getKategorien();
+            List<String> fahrtKategorien = fahrt.getKategorieNames();
 
             fahrtKategorien.forEach(kategorie -> {
                 kilometerProMonatUndKategorie
@@ -375,7 +388,7 @@ public class Fahrtenbuch {
 
         for (Fahrt fahrt : fahrten) {
             int jahr = fahrt.getDatum().getYear();
-            List<String> fahrtKategorien = fahrt.getKategorien();
+            List<String> fahrtKategorien = fahrt.getKategorieNames();
 
             fahrtKategorien.forEach(kategorie -> {
                 kilometerProJahrUndKategorie
@@ -394,7 +407,7 @@ public class Fahrtenbuch {
     public Set<String> getKategorien() {
         Set<String> uniqueKategorien = new HashSet<>();
         for (Fahrt fahrt : fahrten) {
-            uniqueKategorien.addAll(fahrt.getKategorien());
+            uniqueKategorien.addAll(fahrt.getKategorieNames());
         }
         return uniqueKategorien;
     }
@@ -406,12 +419,15 @@ public class Fahrtenbuch {
      * @param x Aktiviert die Methode, wenn true. Kann true oder false sein.
      * @return Eine ObservableList aller Kategorien.
      */
-    public ObservableList<String> getKategorien(Boolean x) {
-        ObservableList<String> uniqueKategorien = FXCollections.observableArrayList();
-
-
+    public ObservableList<Kategorie> getKategorien(Boolean x) {
+        ObservableList<Kategorie> uniqueKategorien = FXCollections.observableArrayList();
         uniqueKategorien.addAll(kategorien);
+        return uniqueKategorien;
+    }
 
+    public ObservableList<String> getKategorieNames(Boolean x) {
+        ObservableList<String> uniqueKategorien = FXCollections.observableArrayList();
+        uniqueKategorien.addAll(kategorien.stream().map(k -> k.getName()).toList());
         return uniqueKategorien;
     }
 
@@ -421,7 +437,20 @@ public class Fahrtenbuch {
      * @param kategorienNeu Eine Sammlung von Kategorien.
      */
     public void addKategories(Collection kategorienNeu) {
-        kategorien.addAll(kategorienNeu);
+        kategorienNeu.forEach(k -> this.addKategorie((String) k));
+        //kategorien.addAll(kategorieList);
+    }
+
+    public boolean deleteKategorie(Kategorie kategorie) {
+        boolean kategorieIstInEinerFahrtVorhanden = false;
+        for(Fahrt f:fahrten){
+            if(f.hasKategorie(kategorie.getName())){
+                System.out.println("Kann Kategorie "+kategorie.getName() +" nicht löschen, da sie in der Fahrt "+ f+" verwendet wird.");
+                return false;
+            }
+        }
+        //var kat = this.kategorien.stream().filter(k -> k.getName().equals(kategorie.getName())).findAny().orElse(null);
+        return this.kategorien.remove(kategorie);
     }
 
     /**
@@ -502,7 +531,7 @@ public class Fahrtenbuch {
         List<Fahrt> gefilterteFahrten = new ArrayList<>();
         for (String filterKategorie : filterKategorien) {
             gefilterteFahrten.addAll(this.fahrten.stream()
-                    .filter(f -> f.getKategorien().contains(filterKategorie))
+                    .filter(f -> f.getKategorieNames().contains(filterKategorie))
                     .collect(Collectors.toList()));
         }
         return gefilterteFahrten;

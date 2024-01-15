@@ -15,7 +15,7 @@ public class FahrtTest {
 
     @Before
     public void setUp() {
-        fahrt = new Fahrt("AB-1234", LocalDate.of(2023, 1, 1), LocalTime.of(10, 0), LocalTime.of(11, 0), 100.0, LocalTime.of(1, 0), Arrays.asList("Geschäftlich", "Stadt"), FahrtStatus.ABSOLVIERT);
+        fahrt = new Fahrt("AB-1234", LocalDate.of(2023, 1, 1), LocalTime.of(10, 0), LocalTime.of(11, 0), 100.0, LocalTime.of(1, 0), Arrays.asList(new Kategorie("Geschäftlich"), new Kategorie("Stadt")), FahrtStatus.ABSOLVIERT);
     }
 
     @Test
@@ -60,7 +60,7 @@ public class FahrtTest {
 
     @Test
     public void testAddKategorie() {
-        fahrt.addKategorie("Privat");
+        fahrt.addKategorie(new Kategorie("Privat"));
         assertTrue(fahrt.getKategorien().contains("Privat"));
     }
 }

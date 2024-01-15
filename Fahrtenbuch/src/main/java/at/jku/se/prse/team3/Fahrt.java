@@ -16,10 +16,10 @@ public class Fahrt {
     private final ObjectProperty<LocalTime> ankunftszeit;
     private final DoubleProperty gefahreneKilometer;
     private final ObjectProperty<LocalTime> aktiveFahrzeit;
-    private final ListProperty<String> kategorien;
+    private final ListProperty<Kategorie> kategorien;
     private final ObjectProperty<FahrtStatus> fahrtstatus;
 
-    public Fahrt(String kfzKennzeichen, LocalDate datum, LocalTime abfahrtszeit, LocalTime ankunftszeit, Double gefahreneKilometer, LocalTime aktiveFahrzeit, List<String> kategorien, FahrtStatus fahrtstatus) {
+    public Fahrt(String kfzKennzeichen, LocalDate datum, LocalTime abfahrtszeit, LocalTime ankunftszeit, Double gefahreneKilometer, LocalTime aktiveFahrzeit, List<Kategorie> kategorien, FahrtStatus fahrtstatus) {
         this.kfzKennzeichen = new SimpleStringProperty(kfzKennzeichen);
         this.datum = new SimpleObjectProperty<>(datum);
         this.abfahrtszeit = new SimpleObjectProperty<>(abfahrtszeit);
@@ -103,16 +103,16 @@ public class Fahrt {
         this.aktiveFahrzeit.set(aktiveFahrzeit);
     }
 
-    public List<String> getKategorien() {
+    public List<Kategorie> getKategorien() {
         return kategorien.get();
     }
 
-    public ListProperty<String> kategorienProperty() {
-        return kategorien;
+    public List<String> getKategorieNames() {
+        return kategorien.stream().map(Kategorie::getName).toList();
     }
 
-    public void setKategorien(List<String> kategorien) {
-        this.kategorien.setAll(kategorien);
+    public ListProperty<Kategorie> kategorienProperty() {
+        return kategorien;
     }
 
     public FahrtStatus getFahrtstatus() {
@@ -128,7 +128,7 @@ public class Fahrt {
     }
 
     // Hinzufügen einer Kategorie
-    public void addKategorie(String kategorie) {
+    public void addKategorie(Kategorie kategorie) {
         this.kategorien.add(kategorie);
     }
 
@@ -144,13 +144,13 @@ public class Fahrt {
     }
 
     // Ersetzen der Kategorienliste
-    public void setKategorienList(List<String> neueKategorien) {
+    public void setKategorienList(List<Kategorie> neueKategorien) {
         this.kategorien.clear();
         this.kategorien.addAll(neueKategorien);
     }
 
     // Abrufen der Kategorienliste als unveränderliche Liste
-    public ObservableList<String> getUnmodifiableKategorien() {
+    public ObservableList<Kategorie> getUnmodifiableKategorien() {
         return FXCollections.unmodifiableObservableList(this.kategorien.get());
     }
 
