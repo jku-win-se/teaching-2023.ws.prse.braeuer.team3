@@ -830,6 +830,7 @@ public class FahrtenbuchUI extends Application {
             }
         });
         VBox kategorieInp = new VBox();
+        kategorieInp.setSpacing(4);
         kategorieInp.getChildren().addAll(kategorienInput, kategorieHinzufuegenButton);
 
         Label tokenLabel = new Label("Enter Dropbox Access Token:");
@@ -861,7 +862,9 @@ public class FahrtenbuchUI extends Application {
 
         primaryStage.setTitle("Einstellungen");
         GridPane gridSettings = new GridPane();
-
+        gridSettings.setPadding(new Insets(10,10,10,10));
+        gridSettings.setHgap(10);
+        gridSettings.setVgap(10);
         gridSettings.getChildren().addAll(exportButton, backButton, pfad, angezeigteKategorien, kategorieInp,tokenLabel,tokenTextField,uploadButton);
 
         gridSettings.setAlignment(Pos.CENTER);
@@ -875,8 +878,6 @@ public class FahrtenbuchUI extends Application {
 
 
         gridSettings.requestFocus();
-
-
 
 
         Scene einstellungen = new Scene(gridSettings, 720, 400);
