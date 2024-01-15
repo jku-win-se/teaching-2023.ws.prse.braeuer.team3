@@ -817,7 +817,14 @@ public class FahrtenbuchUI extends Application {
             @Override
             public void handle(ListView.EditEvent<String> t) {
                 angezeigteKategorienList.getItems().set(t.getIndex(), t.getNewValue());
+
+                //updating table in case the category of any Fahrt has changed
                 fahrtenbuch.renameKategorie(t.getIndex(),t.getNewValue());
+                fahrtenListe.clear();
+                fahrtenListe = FXCollections.observableArrayList(fahrtenbuch.listeFahrten());
+                fahrtenTabelle.setItems(fahrtenListe);
+                fahrtenTabelle.refresh();
+
                 kategorienListe.clear();
                 kategorienListe = fahrtenbuch.getKategorien(true);
                 angezeigteKategorienList.setVisible(true); // TextArea sichtbar machen

@@ -123,6 +123,11 @@ public class Fahrtenbuch {
     }
 
     public void renameKategorie(int index, String newName){
+        fahrten.forEach(f->{
+            if(f.hasKategorie(kategorien.get(index))){
+                f.renameKategorie(kategorien.get(index),newName);
+            }
+        });
         kategorien.set(index, newName);
     }
     /**
