@@ -1,10 +1,5 @@
-![](RackMultipart20240115-1-t30wjj_html_8272e20ab42876bd.gif)
 
-![Shape3](RackMultipart20240115-1-t30wjj_html_36f7c5d22a6bc152.gif)
- ![Shape2](RackMultipart20240115-1-t30wjj_html_b8eed0379bde03b2.gif)
- ![](RackMultipart20240115-1-t30wjj_html_ddc6bc08e04b25a6.gif)
-
-Team 3
+# Team 3
 
 Hannes Mayrhofer, Markus Lindner, Sara Kheribi, Milan Keta
 
