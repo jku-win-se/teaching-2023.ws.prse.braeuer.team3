@@ -26,8 +26,7 @@ Hannes Mayrhofer, Markus Lindner, Sara Kheribi, Milan Keta
 #
 
 
-1.
-# Umgesetzte Anforderungen
+# 1. Umgesetzte Anforderungen
 
 ### 1. Verwaltung von Fahrtdaten
 
@@ -50,8 +49,7 @@ Hannes Mayrhofer, Markus Lindner, Sara Kheribi, Milan Keta
 - **Speichern von Daten:** Die Applikation bietet eine Exportfunktion, mit der die erfassten Fahrtdaten in einer CSV-Datei gespeichert werden können. Dies ist nützlich für die Datensicherung und weitere Verarbeitung außerhalb der Applikation.
 - **Laden von Daten:** Ebenso können Benutzer Daten aus einer CSV-Datei importieren, was den Datenaustausch mit anderen Systemen erleichtert.
 
-1.
-### Benutzeranpassungen und Einstellungen
+### 1. Benutzeranpassungen und Einstellungen
 
 - **Kategorienverwaltung:** Benutzer können Kategorien hinzufügen, bearbeiten oder entfernen. Dies ermöglicht eine individuelle Anpassung der Kategorisierung von Fahrten.
 - **Anpassung von Einstellungen:** Es können Einstellungen wie den Speicherpfad für den Export angepasst werden, was zusätzliche Flexibilität bietet.
