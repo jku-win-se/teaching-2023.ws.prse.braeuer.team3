@@ -25,29 +25,31 @@ Hannes Mayrhofer, Markus Lindner, Sara Kheribi, Milan Keta
 
 ### 1. Verwaltung von Fahrtdaten
 
-- **Erfassung neuer Fahrten:** Man kann über ein spezielles Eingabeformular neue Fahrten hinzufügen. Dieses Formular erfasst relevante Informationen wie KFZ-Kennzeichen, Datum, Uhrzeit, gefahrene Kilometer und Kategorien.
-- **Bearbeitung bestehender Fahrten:** Aus der Übersichtstabelle heraus können Benutzer eine Fahrt auswählen und über ein Dialogfenster bearbeiten. Änderungen können an verschiedenen Datenpunkten, wie Datum oder Kilometer, vorgenommen werden.
-- **Löschen von Fahrten:** Benutzer haben die Möglichkeit, ausgewählte Fahrten zu löschen.
+- **Erfassung neuer Fahrten(US1&7):** Man kann über ein spezielles Eingabeformular neue Fahrten hinzufügen. Dieses Formular erfasst relevante Informationen wie KFZ-Kennzeichen, Datum, Uhrzeit, gefahrene Kilometer und Kategorien.
+- **Bearbeitung bestehender Fahrten(US3):** Aus der Übersichtstabelle heraus können Benutzer eine Fahrt auswählen und über ein Dialogfenster bearbeiten. Änderungen können an verschiedenen Datenpunkten, wie Datum oder Kilometer, vorgenommen werden.
+- **Löschen von Fahrten(US4):** Benutzer haben die Möglichkeit, ausgewählte Fahrten zu löschen.
+- **Erfassung wiederkehrender/zukünftige fahrten(US5):** Im EingabeFormular können auch wiederkehrende/zukünftige fahrten erstellt werden. 
 
-### 2. Anzeige und Filterung von Fahrtdaten
+### 2. Anzeige und Filterung/Sortierung von Fahrtdaten
 
-- **Übersichtliche Darstellung:** Die Hauptansicht zeigt eine Tabelle aller erfassten Fahrten. Diese Tabelle bietet eine klare und strukturierte Übersicht.
-- **Filterfunktionen:** Benutzer können Fahrtdaten nach verschiedenen Kriterien wie Datum, Durchschnittsgeschwindigkeit und Kategorien filtern. Diese Funktionalität verbessert die Benutzerfreundlichkeit, insbesondere bei einer großen Anzahl von Fahrten.
+- **Übersichtliche Darstellung(US2&6):** Die Hauptansicht zeigt eine Tabelle aller erfassten Fahrten. Diese Tabelle bietet eine klare und strukturierte Übersicht. Status der Fahrten können auch dargestellt werden.
+- **Filterfunktionen(US9&10&12):** Benutzer können Fahrtdaten nach verschiedenen Kriterien wie Datum, Durchschnittsgeschwindigkeit und Kategorien filtern. Diese Funktionalität verbessert die Benutzerfreundlichkeit, insbesondere bei einer großen Anzahl von Fahrten.
+- **Sortierung der Daten(US11):** Die Fahrten können nach beliebigen Eigenschaften sortiert werden.
 
 ### 3. Statistische Auswertungen
 
-- **Grafische Darstellungen:** Die Applikation bietet die Möglichkeit, statistische Daten in Form von Balkendiagrammen zu visualisieren. Dies umfasst beispielsweise die Anzeige der gefahrenen Kilometer pro Monat oder Jahr.
-- **Erweiterte Statistiken:** Neben den Basisstatistiken können Benutzer auch detaillierte statistische Auswertungen einsehen, die eine tiefere Analyse der Fahrtdaten ermöglichen.
+- **Grafische Darstellungen(US14):** Die Applikation bietet die Möglichkeit, statistische Daten in Form von Balkendiagrammen zu visualisieren. Dies umfasst beispielsweise die Anzeige der gefahrenen Kilometer pro Monat oder Jahr.
+- **Erweiterte Statistiken(US13):** Neben den Basisstatistiken können Benutzer auch detaillierte statistische Auswertungen einsehen, die eine tiefere Analyse der Fahrtdaten ermöglichen.
 
 ### 4. Datenexport und -import
 
-- **Speichern von Daten:** Die Applikation bietet eine Exportfunktion, mit der die erfassten Fahrtdaten in einer CSV-Datei gespeichert werden können. Dies ist nützlich für die Datensicherung und weitere Verarbeitung außerhalb der Applikation.
-- **Laden von Daten:** Ebenso können Benutzer Daten aus einer CSV-Datei importieren, was den Datenaustausch mit anderen Systemen erleichtert.
-- **Exportieren in die Cloud**: Die Anwendung bietet auch die Auslagerung der Daten an den Clouddienst Dropbox. Diese Funktionalität ermöglicht ein höheres Maß an Datensicherheit.
+- **Speichern von Daten(US8):** Die Applikation bietet eine Exportfunktion, mit der die erfassten Fahrtdaten in einer CSV-Datei gespeichert werden können. Dies ist nützlich für die Datensicherung und weitere Verarbeitung außerhalb der Applikation.
+- **Laden von Daten(US16):** Ebenso können Benutzer Daten aus einer CSV-Datei importieren, was den Datenaustausch mit anderen Systemen erleichtert.
+- **Exportieren in die Cloud(US17):** Die Anwendung bietet auch die Auslagerung der Daten an den Clouddienst Dropbox. Diese Funktionalität ermöglicht ein höheres Maß an Datensicherheit.
 
 ### 1. Benutzeranpassungen und Einstellungen
 
-- **Kategorienverwaltung:** Benutzer können Kategorien hinzufügen, bearbeiten oder entfernen. Dies ermöglicht eine individuelle Anpassung der Kategorisierung von Fahrten.
+- **Kategorienverwaltung(US15):** Benutzer können Kategorien hinzufügen, bearbeiten oder entfernen. Dies ermöglicht eine individuelle Anpassung der Kategorisierung von Fahrten.
 - **Anpassung von Einstellungen:** Es können Einstellungen wie den Speicherpfad für den Export angepasst werden, was zusätzliche Flexibilität bietet.
 
 # Überblick über das System aus Entwicklersicht
