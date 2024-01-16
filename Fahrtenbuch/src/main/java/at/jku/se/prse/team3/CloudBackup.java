@@ -8,7 +8,12 @@ import com.dropbox.core.v2.files.WriteMode;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serial;
 
+/**
+ * The CloudBackup class provides methods for uploading files to Dropbox for cloud backup.
+ * It uses the Dropbox API to perform file uploads.
+ */
 public class CloudBackup {
 
     /**
@@ -22,6 +27,9 @@ public class CloudBackup {
      * This exception is a subclass of RuntimeException.
      */
     public static class CloudBackupException extends RuntimeException {
+        @Serial
+        private static final long serialVersionUID = 123456789L;
+
         /**
          * Constructs a new CloudBackupException with the specified detail message and cause.
          *
@@ -38,6 +46,9 @@ public class CloudBackup {
      * This exception is a subclass of RuntimeException.
      */
     public static class DropboxUploadException extends RuntimeException {
+        @Serial
+        private static final long serialVersionUID = 123455L;
+
         /**
          * Constructs a new DropboxUploadException with the specified detail message and cause.
          *
