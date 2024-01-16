@@ -329,14 +329,6 @@ public class FahrtenbuchUI extends Application {
         BorderPane root = new BorderPane();
         root.setCenter(fahrtenTabelle); // Ersetzen Sie createTableView() durch Ihre TableView-Initialisierung
         root.setTop(topBox);
-
-        // dies würde bei jedem Klick einer Zeile das Edit-Fenster aufmachen
-/*        fahrtenTabelle.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-             bearbeiteFahrt(newSelection, primaryStage);
-            }
-        });*/
-
         Scene fahrten = new Scene(root, 720, 400);
 
         overviewStage.setScene(fahrten);
