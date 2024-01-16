@@ -135,12 +135,6 @@ public class FahrtenbuchUI extends Application {
         fadeTransition.setToValue(1);
         fadeTransition.play();
 
-
-
-
-
-        //primaryStage.show();
-        //basically useless Task can be removed if wished for controls the progress of loading bar
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() throws Exception {
