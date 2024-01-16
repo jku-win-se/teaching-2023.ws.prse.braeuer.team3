@@ -806,8 +806,8 @@ public class FahrtenbuchUI extends Application {
         HBox angezeigteKategorien = new HBox();
         angezeigteKategorien.setSpacing(10);
 
-        ObservableList<String> items = FXCollections.observableArrayList(kategorienListe);
-        ListView<String> angezeigteKategorienList = new ListView<>(items);
+        ObservableList<String> kategorienObservableList = FXCollections.observableArrayList(fahrtenbuch.getKategorien(true));
+        ListView<String> angezeigteKategorienList = new ListView<>(kategorienObservableList);
         // Anfangs nicht sichtbar machen
         angezeigteKategorien.setPrefHeight(70); // Höhe der TextArea anpassen
         angezeigteKategorienList.setEditable(true);
@@ -833,12 +833,13 @@ public class FahrtenbuchUI extends Application {
 
         Button deleteBtn = new Button("Delete");
         deleteBtn.setOnAction(actionEvent -> {
-            var deleted= fahrtenbuch.deleteKategorie((String) angezeigteKategorienList.getSelectionModel().getSelectedItem());
-            if(deleted){
-                this.kategorienListe.clear();
-                this.kategorienListe = fahrtenbuch.getKategorien(true);
-                angezeigteKategorienList.setVisible(true); // TextArea sichtbar machen
-                angezeigteKategorienList.refresh();
+            String selectedKategorie = angezeigteKategorienList.getSelectionModel().getSelectedItem();
+            if(selectedKategorie != null && !selectedKategorie.isEmpty()) {
+                boolean deleted = fahrtenbuch.deleteKategorie(selectedKategorie);
+                if(deleted) {
+                    // Entferne die Kategorie aus der ObservableList
+                    kategorienObservableList.remove(selectedKategorie);
+                }
             }
         });
         angezeigteKategorien.getChildren().addAll(angezeigteKategorienList,deleteBtn);
@@ -847,14 +848,13 @@ public class FahrtenbuchUI extends Application {
         kategorieHinzufuegenButton.setOnAction(event -> {
             String kategorie = kategorienInput.getText().trim();
             if (!kategorie.isEmpty()) {
-                addToKategories(kategorie, kategorienListe::add); // Füge die Kategorie zur Liste hinzu
-                addToKategories(kategorie, addedCategories::add);
-                angezeigteKategorienList.setVisible(true); // TextArea sichtbar machen
-                angezeigteKategorienList.refresh();// Kategorie zur TextArea hinzufügen
+                // Füge die neue Kategorie zur ObservableList hinzu
+                kategorienObservableList.add(kategorie);
                 kategorienInput.clear(); // Eingabefeld leeren
-                fahrtenbuch.addKategories(addedCategories);
+                fahrtenbuch.addKategories(FXCollections.observableArrayList(kategorie)); // Füge Kategorie zum Fahrtenbuch hinzu
             }
         });
+
         VBox kategorieInp = new VBox();
         kategorieInp.setSpacing(4);
         kategorieInp.getChildren().addAll(kategorienInput, kategorieHinzufuegenButton);
