@@ -43,6 +43,7 @@ Hannes Mayrhofer, Markus Lindner, Sara Kheribi, Milan Keta
 
 - **Speichern von Daten:** Die Applikation bietet eine Exportfunktion, mit der die erfassten Fahrtdaten in einer CSV-Datei gespeichert werden können. Dies ist nützlich für die Datensicherung und weitere Verarbeitung außerhalb der Applikation.
 - **Laden von Daten:** Ebenso können Benutzer Daten aus einer CSV-Datei importieren, was den Datenaustausch mit anderen Systemen erleichtert.
+- **Exportieren in die Cloud**: Die Anwendung bietet auch die Auslagerung der Daten an den Clouddienst Dropbox. Diese Funktionalität ermöglicht ein höheres Maß an Datensicherheit.
 
 ### 1. Benutzeranpassungen und Einstellungen
 
