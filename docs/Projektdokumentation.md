@@ -87,6 +87,9 @@ PMD\_
 - **Statistische Auswertungen anzeigen**: Zeigt verschiedene statistische Ansichten, wie Jahresstatistik und erweiterte Kilometerstatistik.
 - **Export/Import von Daten**: Implementiert Funktionen zum Speichern und Laden der Fahrtdaten in bzw. aus CSV-Dateien.
 - **Einstellungen verwalten**: Bietet einen Einstellungsbildschirm, in dem Benutzer die Kategorien verwalten und Einstellungen wie den Speicherpfad anpassen können.
+- **Info Page**: Enthält Informationen über Softwareentwickler, Betreuer, Softwareversion usw.
+- **Grafische Ansicht**: Zeigt die statische Ansichten in grafischer Form.
+- **Filterfunktion**: Erlaubt den Benutzer die Fahrten zu filtern durch einen Filterfenster.
 
 ### Wichtige Methoden
 #### `public void start(Stage primaryStage)`
@@ -152,25 +155,32 @@ Nimmt einen Path String und importiert mittels CSVReader die Daten aus dem angeg
 - `loescheFahrten(...)`: Löscht eine spezifische Fahrt basierend auf Schlüsselinformationen.
 - `planeZukuenftigeFahrten(...)`: Plant wiederkehrende Fahrten.
 
-### Methoden zur Datenabfrage und -aufbereitung
+### 3. Methoden zur Datenabfrage und -aufbereitung
 - `listeFahrten()`: Gibt eine Liste aller erfassten Fahrten zurück.
 - `berechneKilometerProMonat()`: Berechnet die insgesamt gefahrenen Kilometer pro Monat.
 - `berechneKilometerProMonatUndKategorie()`: Berechnet die gefahrenen Kilometer pro Monat und Kategorie.
 - `berechneKilometerProJahrUndKategorie()`: Berechnet die gefahrenen Kilometer pro Jahr und Kategorie.
 
-### Kategorienverwaltung und Filterung
+### 4. Kategorienverwaltung und Filterung
 - `addKategorie(String kategorie)`: Fügt eine neue Kategorie hinzu.
 - `getKategorien()` und `getKategorien(Boolean x)`: Gibt eine Liste aller einzigartigen Kategorien zurück.
 - `addKategories(Collection kategorienNeu)`: Fügt eine Sammlung von Kategorien zur Liste hinzu.
 - Filtermethoden (`filterByDate`, `filterByAvgVUnder`, `filterByAvgVOver`, `filterByKategorie`): Ermöglichen es, Fahrten nach verschiedenen Kriterien zu filtern.
 
-### Export und Import von Daten
+### 5. Export und Import von Daten
 - `exporterMethod`: Speichert Daten in ausgewähltem Pfad.
 - `importerMethod`: Importiert Daten von ausgewähltem Pfad.
 - `exportFahrt()`: Ruft `exporterMethod` mit Pfad des standard Speicherortes auf.
 - `importFahrt()`: Ruft `importerMethod` mit Pfad des standard Speicherortes auf.
 - `manualImport(Path path)`: Ruft `importerMethod` mit Pfad eines ausgewählten Speicherortes auf.
 - `ExportManual(Path path)`: Ruft `exporterMethod` mit Pfad eines ausgewählten Speicherortes auf.
+
+## Klasse CloudBackUp:
+
+
+### 1. Methoden zur exportieren von Daten in Dropbox
+- `uploadDB(String localPath, String cloudPath, String accessToken)`: Fügt lokale Daten in Dropbox hinzu. Access Token muss extra von der User generiert werden. Implementierung in FahrtBuchUI(Settings).
+
 
 # Installationsanleitung
 
