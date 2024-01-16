@@ -3,20 +3,24 @@ package at.jku.se.prse.team3;
 import com.dropbox.core.*;
 import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.CommitInfo;
-import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.UploadErrorException;
 import com.dropbox.core.v2.files.WriteMode;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serial;
 
 public class CloudBackup {
 
+    /**
+     * The client identifier used for Dropbox integration.
+     */
     private static final String CLIENT_IDENTIFIER = "wk400vxjbjtryt0";
 
     //Custom exception for Dropbox upload errors.
-
+    /**
+     * Custom exception class for representing errors related to cloud backups.
+     * This exception is a subclass of RuntimeException.
+     */
     public static class CloudBackupException extends RuntimeException {
         /**
          * Constructs a new CloudBackupException with the specified detail message and cause.
@@ -29,6 +33,10 @@ public class CloudBackup {
         }
     }
 
+    /**
+     * Custom exception class for representing errors related to Dropbox file uploads.
+     * This exception is a subclass of RuntimeException.
+     */
     public static class DropboxUploadException extends RuntimeException {
         /**
          * Constructs a new DropboxUploadException with the specified detail message and cause.
@@ -42,7 +50,10 @@ public class CloudBackup {
     }
 
     //Custom exception for file upload errors.
-
+    /**
+     * Custom exception class for representing errors related to file uploads.
+     * This exception is a subclass of DbxException.
+     */
     public static class FileUploadException extends DbxException {
         /**
          * Constructs a new FileUploadException with the specified detail message and cause.
@@ -67,11 +78,11 @@ public class CloudBackup {
             DbxRequestConfig config = DbxRequestConfig.newBuilder(CLIENT_IDENTIFIER).build();
             DbxClientV2 client = new DbxClientV2(config, accessToken);
 
-            CommitInfo commitInfo = CommitInfo.newBuilder(cloudPath)
+             CommitInfo.newBuilder(cloudPath)
                     .withMode(WriteMode.OVERWRITE)
                     .build();
 
-            FileMetadata metadata = client.files().uploadBuilder(cloudPath)
+             client.files().uploadBuilder(cloudPath)
                     .withMode(WriteMode.OVERWRITE)
                     .uploadAndFinish(input);
 
