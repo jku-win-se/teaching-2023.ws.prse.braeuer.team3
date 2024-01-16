@@ -48,7 +48,7 @@ Hannes Mayrhofer, Markus Lindner, Sara Kheribi, Milan Keta
 - **Laden von Daten(US16):** Ebenso können Benutzer Daten aus einer CSV-Datei importieren, was den Datenaustausch mit anderen Systemen erleichtert.
 - **Exportieren in die Cloud(US17):** Die Anwendung bietet auch die Auslagerung der Daten an den Clouddienst Dropbox. Diese Funktionalität ermöglicht ein höheres Maß an Datensicherheit.
 
-### 1. Benutzeranpassungen und Einstellungen
+### 5. Benutzeranpassungen und Einstellungen
 
 - **Kategorienverwaltung(US15):** Benutzer können Kategorien hinzufügen, bearbeiten oder entfernen. Dies ermöglicht eine individuelle Anpassung der Kategorisierung von Fahrten.
 - **Anpassung von Einstellungen:** Es können Einstellungen wie den Speicherpfad für den Export angepasst werden, was zusätzliche Flexibilität bietet.
