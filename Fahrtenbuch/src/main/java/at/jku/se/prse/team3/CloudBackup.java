@@ -56,7 +56,6 @@ public class CloudBackup {
                     .withMode(WriteMode.OVERWRITE)
                     .uploadAndFinish(in);
 
-            System.out.println("File uploaded to Dropbox: " + metadata.getName());
         } catch (IOException | UploadErrorException e) {
             throw new DropboxUploadException("Error uploading to Dropbox",e);
         } catch (DbxException e) {
