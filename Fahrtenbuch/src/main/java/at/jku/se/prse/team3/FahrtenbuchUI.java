@@ -2,6 +2,7 @@ package at.jku.se.prse.team3;
 import java.nio.file.Paths;
 import java.util.logging.Logger;
 
+import com.dropbox.core.v2.files.UploadErrorException;
 import javafx.animation.FadeTransition;
 
 import javafx.application.Application;
@@ -890,13 +891,14 @@ public class FahrtenbuchUI extends Application {
             String cloudPathKategorien = "/Apps/SEPR_Team_3/kategorien.csv";
             try {
                 CloudBackup.uploadDB(fahrtenIn, cloudPathFahrten, accessToken);
-            } catch (CloudBackup.FileUploadException e) {
-                throw new RuntimeException(e);
+            } catch (CloudBackup.DropboxUploadException | CloudBackup.FileUploadException e) {
+                throw new CloudBackup.CloudBackupException("Error uploading Fahrten", e);
             }
+
             try {
                 CloudBackup.uploadDB(kategorienIn, cloudPathKategorien, accessToken);
-            } catch (CloudBackup.FileUploadException e) {
-                throw new RuntimeException(e);
+            } catch (CloudBackup.DropboxUploadException | CloudBackup.FileUploadException e) {
+                throw new CloudBackup.CloudBackupException("Error uploading Kategorien", e);
             }
         });
 

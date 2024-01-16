@@ -16,6 +16,12 @@ public class CloudBackup {
 
     //Custom exception for Dropbox upload errors.
 
+    public static class CloudBackupException extends RuntimeException {
+        public CloudBackupException(String message, Throwable cause) {
+            super(message, cause);
+        }
+    }
+
     public static class DropboxUploadException extends RuntimeException {
         public DropboxUploadException(String message, Throwable cause) {
             super(message, cause);
