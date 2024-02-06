@@ -49,7 +49,7 @@ jobs:
         rulesets: 'ruleset.xml'
 
     - name: Automatisierung bei einer Verletzung stoppen 
-      if: steps.pmd.outputs.violations != 0
+      if: steps.pmd.outputs.errors != 0
       run: exit 1
     
     
