@@ -360,10 +360,6 @@ public class Fahrtenbuch {
                 for (String[] d : allKat) {
                     for (String cat : d) {
                         this.kategorien.add(cat.trim());
-
-
-
-
                     }
                 }
                 if(alleKategorien!=null){
