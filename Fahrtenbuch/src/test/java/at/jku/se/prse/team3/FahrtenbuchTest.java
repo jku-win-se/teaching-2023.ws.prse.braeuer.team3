@@ -71,6 +71,6 @@ public class FahrtenbuchTest {
 
     @Test
     public void manualImport() {
-        fahrtenbuch.manualImport(Path.of(System.getProperty("user.home")+ File.separator + "Documents"));
+        fahrtenbuch.manualImport(Path.of(System.getProperty("user.home")+ File.separator + "Documents"+File.separator+"Fahrtenbuch 0.0.3"));
     }
 }
