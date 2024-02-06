@@ -98,7 +98,7 @@ public class Fahrtenbuch {
     }
 
     /**
-     * Hilffunktion zum Hionzufügen einer Kategorie
+     * Hilffunktion zum Hinzufügen einer Kategorie
      *
      * @param kategorie
      */
@@ -115,7 +115,7 @@ public class Fahrtenbuch {
         }
 
         if(found){
-            System.out.println("Kann Kategorie "+ kategorie + " nicht löschen, da sie in einer Fahrt verwendet wird.");
+            LOGGER.info("Kann Kategorie "+ kategorie + " nicht löschen, da sie in einer Fahrt verwendet wird.");
             return false;
         }else{
             return this.kategorien.remove(kategorie);
@@ -316,7 +316,9 @@ public class Fahrtenbuch {
             LocalTime ankunftszeit;
             Double gefahreneKilometer;
             LocalTime aktiveFahrzeit;
-            List<String> kategorien;
+            List<String> kategorien= new ArrayList<>();
+            List<String> alleKategorien = new ArrayList<>();
+            Set<String> uniquifier;
             FahrtStatus fahrtstatus;
 
 
@@ -340,9 +342,9 @@ public class Fahrtenbuch {
                     if (FahrtStatus.ZUKUENFTIG.toString().equals(data[6])) fahrtstatus = FahrtStatus.ZUKUENFTIG;
                     else if (FahrtStatus.ABSOLVIERT.toString().equals(data[6])) fahrtstatus = FahrtStatus.ABSOLVIERT;
                     else fahrtstatus = FahrtStatus.AUF_FAHRT;
-                    kategorien = Arrays.asList(data[7]);
+                    kategorien = Arrays.asList(data[7].split(", "));
                     neueFahrt(kFZKennzeichen, datum, abfahrtszeit, ankunftszeit, gefahreneKilometer, aktiveFahrzeit, fahrtstatus, kategorien);
-
+                    alleKategorien.addAll(kategorien);
                 }
 
             } catch (NullPointerException | FileNotFoundException nullPointerException) {
@@ -354,11 +356,23 @@ public class Fahrtenbuch {
 
             try (CSVReader reader2 = new CSVReader(new FileReader(importKategorien.toFile()))) {
                 List<String[]> allKat = reader2.readAll();
+
                 for (String[] d : allKat) {
                     for (String cat : d) {
                         this.kategorien.add(cat.trim());
+
+
+
+
                     }
                 }
+                if(alleKategorien!=null){
+
+                    this.kategorien.addAll(alleKategorien);
+
+                }
+                uniquifier=new HashSet<>(this.kategorien);
+                this.kategorien=uniquifier.stream().collect(Collectors.toList());
             } catch (CsvException | FileNotFoundException e) {
                 throw new InExportExc("An Error occured during Import",e);
             } catch (IOException e) {
