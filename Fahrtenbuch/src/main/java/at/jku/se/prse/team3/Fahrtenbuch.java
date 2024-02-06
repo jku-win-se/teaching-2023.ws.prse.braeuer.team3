@@ -325,26 +325,30 @@ public class Fahrtenbuch {
             try (CSVReader reader = new CSVReader(new FileReader(importFahrten.toFile()))) {
 
                 while ((data = reader.readNext()) != null) {
+                    if (data.length<8){
+                        LOGGER.warning("not Enough Data to Import");
+                    }else {
+
+                        kFZKennzeichen = data[0];
 
 
-                    kFZKennzeichen = data[0];
+                        datum = LocalDate.parse(data[1]);
 
 
-                    datum = LocalDate.parse(data[1]);
+                        abfahrtszeit = LocalTime.parse(data[2]);
 
 
-                    abfahrtszeit = LocalTime.parse(data[2]);
-
-
-                    ankunftszeit = LocalTime.parse(data[3]);
-                    gefahreneKilometer = Double.valueOf(data[4]);
-                    aktiveFahrzeit = LocalTime.parse(data[5]);
-                    if (FahrtStatus.ZUKUENFTIG.toString().equals(data[6])) fahrtstatus = FahrtStatus.ZUKUENFTIG;
-                    else if (FahrtStatus.ABSOLVIERT.toString().equals(data[6])) fahrtstatus = FahrtStatus.ABSOLVIERT;
-                    else fahrtstatus = FahrtStatus.AUF_FAHRT;
-                    kategorien = Arrays.asList(data[7].split(", "));
-                    neueFahrt(kFZKennzeichen, datum, abfahrtszeit, ankunftszeit, gefahreneKilometer, aktiveFahrzeit, fahrtstatus, kategorien);
-                    alleKategorien.addAll(kategorien);
+                        ankunftszeit = LocalTime.parse(data[3]);
+                        gefahreneKilometer = Double.valueOf(data[4]);
+                        aktiveFahrzeit = LocalTime.parse(data[5]);
+                        if (FahrtStatus.ZUKUENFTIG.toString().equals(data[6])) fahrtstatus = FahrtStatus.ZUKUENFTIG;
+                        else if (FahrtStatus.ABSOLVIERT.toString().equals(data[6]))
+                            fahrtstatus = FahrtStatus.ABSOLVIERT;
+                        else fahrtstatus = FahrtStatus.AUF_FAHRT;
+                        kategorien = Arrays.asList(data[7].split(", "));
+                        neueFahrt(kFZKennzeichen, datum, abfahrtszeit, ankunftszeit, gefahreneKilometer, aktiveFahrzeit, fahrtstatus, kategorien);
+                        alleKategorien.addAll(kategorien);
+                    }
                 }
 
             } catch (NullPointerException | FileNotFoundException nullPointerException) {
