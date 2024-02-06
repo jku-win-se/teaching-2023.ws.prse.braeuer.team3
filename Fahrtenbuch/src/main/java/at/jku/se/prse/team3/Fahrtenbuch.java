@@ -1,4 +1,5 @@
 package at.jku.se.prse.team3;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
@@ -115,6 +116,7 @@ public class Fahrtenbuch {
         }
 
         if(found){
+            if(LOGGER.isLoggable(Level.INFO))
             LOGGER.info("Kann Kategorie "+ kategorie + " nicht löschen, da sie in einer Fahrt verwendet wird.");
             return false;
         }else{
