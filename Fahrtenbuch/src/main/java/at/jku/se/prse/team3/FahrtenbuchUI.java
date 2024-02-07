@@ -39,6 +39,7 @@ import javafx.util.converter.*;
 import org.controlsfx.control.CheckComboBox;
 
 
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -331,7 +332,7 @@ public class FahrtenbuchUI extends Application {
             }
         });*/
 
-        Scene fahrten = new Scene(root, 720, 400);
+        Scene fahrten = new Scene(root, 830, 400);
 
         overviewStage.setScene(fahrten);
 
@@ -472,7 +473,7 @@ public class FahrtenbuchUI extends Application {
             }
         });
         //SPACER BOX
-        Box box = new Box(10, 30, 720);
+        Box box = new Box(10, 30, 730);
         box.setVisible(true);
 
         VBox fahrtTextinputboxen = new VBox(1);
@@ -573,7 +574,7 @@ public class FahrtenbuchUI extends Application {
         StackPane.setAlignment(backButton, Pos.BOTTOM_LEFT);
         StackPane.setAlignment(info, Pos.TOP_LEFT);
 
-        Scene neueFahrt = new Scene(layoutNewTrip, 720, 400);
+        Scene neueFahrt = new Scene(layoutNewTrip, 830, 400);
 
         primaryStage.setScene(neueFahrt);
         primaryStage.show();
@@ -765,7 +766,6 @@ public class FahrtenbuchUI extends Application {
         enterSavePath.setInitialDirectory(new File(System.getProperty("user.home")));
 
         Button pfad = new Button("Import Data");
-        pfad.setStyle("-fx-background-color: red;");
         pfad.setOnAction(event -> {
             File selectedFile=enterSavePath.showDialog(primaryStage);
             if (selectedFile != null) {
@@ -777,7 +777,6 @@ public class FahrtenbuchUI extends Application {
         });
         Button exportButton = new Button();
         exportButton.setText("Export Data");
-        exportButton.setStyle("-fx-background-color: green;");
         exportButton.setOnAction(event -> {
                     File selectedFile=enterSavePath.showDialog(primaryStage);
             if (selectedFile != null) {
@@ -917,7 +916,7 @@ public class FahrtenbuchUI extends Application {
         gridSettings.requestFocus();
 
 
-        Scene einstellungen = new Scene(gridSettings, 720, 400);
+        Scene einstellungen = new Scene(gridSettings, 830, 400);
         primaryStage.setScene(einstellungen);
         Platform.runLater(gridSettings::requestFocus);
         primaryStage.show();
@@ -1002,7 +1001,7 @@ public class FahrtenbuchUI extends Application {
             barChart.getData().add(series);
         }
 
-        Scene scene = new Scene(barChart, 1000, 600);
+        Scene scene = new Scene(barChart, 830, 400);
         stage.setScene(scene);
         stage.show();
     }
@@ -1042,7 +1041,7 @@ public class FahrtenbuchUI extends Application {
             barChart.getData().add(series);
         }
 
-        Scene scene = new Scene(barChart, 1000, 600);
+        Scene scene = new Scene(barChart, 830, 400);
         stage.setScene(scene);
         stage.show();
     }
@@ -1092,7 +1091,7 @@ public class FahrtenbuchUI extends Application {
         TableView<Map.Entry<YearMonth, Map<String, Double>>> tableView = erstelleErweiterteKilometerTableView(kategorien);
         aktualisiereErweiterteKilometerTabelle(tableView);
 
-        Scene scene = new Scene(tableView, 800, 600);
+        Scene scene = new Scene(tableView, 830, 400);
         stage.setScene(scene);
         stage.show();
     }
@@ -1157,7 +1156,7 @@ public class FahrtenbuchUI extends Application {
 
             Stage stage = new Stage();
             stage.setTitle("Jahreskilometerstatistik");
-            Scene scene = new Scene(tableView, 800, 600);
+            Scene scene = new Scene(tableView, 830, 400);
             stage.setScene(scene);
             stage.show();
         }
@@ -1225,8 +1224,13 @@ public class FahrtenbuchUI extends Application {
         categoryLabel.setMaxWidth(200);
 
         final CheckComboBox<String> categoryFilter = new CheckComboBox<>(fahrtenbuch.getKategorien(true));
-        CheckBox avgUnderCheckBox = new CheckBox("Unterhalb des Durchschnitts");
-        CheckBox avgOverCheckBox = new CheckBox("Über oder gleich dem Durchschnitt");
+        ToggleGroup avgToggleGroup = new ToggleGroup();
+
+        RadioButton avgUnderRadioButton = new RadioButton("Unterhalb des Durchschnitts");
+        avgUnderRadioButton.setToggleGroup(avgToggleGroup);
+
+        RadioButton avgOverRadioButton = new RadioButton("Über oder gleich dem Durchschnitt");
+        avgOverRadioButton.setToggleGroup(avgToggleGroup);
 
         HBox datumBox = new HBox(5);
         datumBox.getChildren().addAll(datumL, datum);
@@ -1235,14 +1239,14 @@ public class FahrtenbuchUI extends Application {
         categoryBox.getChildren().addAll(categoryLabel, categoryFilter);
 
         HBox avgBox = new HBox(5);
-        avgBox.getChildren().addAll(avgLabel, avgTF, avgUnderCheckBox, avgOverCheckBox);
+        avgBox.getChildren().addAll(avgLabel, avgTF, avgUnderRadioButton, avgOverRadioButton);
 
         VBox fahrtTextinputboxen = new VBox(10);
         fahrtTextinputboxen.getChildren().addAll(datumBox, categoryBox, avgBox);
 
         ScrollPane scrollPane = new ScrollPane(fahrtTextinputboxen);
         scrollPane.setFitToWidth(true);
-        scrollPane.setPrefHeight(400);
+        scrollPane.setPrefHeight(200);
 
         StackPane layoutFilter = new StackPane();
         layoutFilter.getChildren().add(scrollPane);
@@ -1255,7 +1259,7 @@ public class FahrtenbuchUI extends Application {
                     List<String> selectedCategories = categoryFilter.getCheckModel().getCheckedItems().stream().toList();
                     double avg = avgTF.getText().isEmpty() ? -1.0 : Double.parseDouble(avgTF.getText());
 
-                    List<Fahrt> filteredFahrten = filterFahrten(date, selectedCategories, avg, avgUnderCheckBox.isSelected(), avgOverCheckBox.isSelected());
+                    List<Fahrt> filteredFahrten = filterFahrten(date, selectedCategories, avg, avgUnderRadioButton.isSelected(), avgOverRadioButton.isSelected());
 
                     fahrtenTabelle.setItems(FXCollections.observableArrayList(filteredFahrten));
                 } catch (DateTimeParseException | NumberFormatException e) {
