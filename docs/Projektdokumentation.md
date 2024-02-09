@@ -193,3 +193,89 @@ Nachdem Sie das Maven-Projekt gebaut haben, können Sie die Applikation wie folg
    ```bash
    cd Pfad/zum/Projekt/target
 java -jar Fahrtenbuch-1.0-SNAPSHOT.jar
+
+
+
+## Funktionen der Fahrtenbuch-App
+
+### Hauptfenster
+
+Das Hauptfenster zeigt verschiedene Fahrten mit Details wie:
+- KFZ-Kennzeichen
+- Datum
+- Abfahrts- und Ankunftszeit
+- Gefahrene Kilometer
+- Aktive Fahrzeit
+- Fahrtstatus
+- Kategorien
+- Durchschnittliche Geschwindigkeit
+
+Benutzer können Fahrten aufzeichnen und verwalten, indem sie:
+- Neue Einträge hinzufügen
+- Bestehende bearbeiten
+- Statistiken einsehen
+- 
+![Fahrtenbuch Hauptfenster](https://github.com/jku-win-se/teaching-2023.ws.prse.braeuer.team3/blob/main/docs/screenshots/Screenshot%202024-02-09%20064433.png "Hauptfenster der Fahrtenbuch-App")
+
+### Neue Fahrt erfassen
+
+Die Eingabemaske ermöglicht das Erfassen neuer Fahrten mit folgenden Details:
+- KFZ-Kennzeichen
+- Datum
+- Zeiten
+- Kilometer
+- Kategorien
+  
+![Fahrtenbuch Hauptfenster](https://github.com/jku-win-se/teaching-2023.ws.prse.braeuer.team3/blob/main/docs/screenshots/Screenshot%202024-02-09%20064459.png)
+
+### Einstellungen
+Die Einstellungsseite bietet folgende Funktionen:
+- Importieren und Exportieren von Daten
+- Hochladen auf Dropbox mit einem Zugangstoken
+- Verwalten von Kategorien
+  
+![Fahrtenbuch Hauptfenster](https://github.com/jku-win-se/teaching-2023.ws.prse.braeuer.team3/blob/main/docs/screenshots/Screenshot%202024-02-09%20064515.png)
+
+### Fahrt bearbeiten
+Ein spezielles Fenster erlaubt das Bearbeiten von Fahrtendetails mit Optionen zum:
+- Speichern
+- Abbrechen
+- Löschen von Einträgen
+  
+![Fahrtenbuch Hauptfenster](https://github.com/jku-win-se/teaching-2023.ws.prse.braeuer.team3/blob/main/docs/screenshots/Screenshot%202024-02-09%20064531.png)
+
+### Jahreskilometerstatistik
+Eine Tabelle zeigt die Jahreskilometerstatistik aufgeschlüsselt nach:
+- Jahr
+- Kategorien (geschäftlich, andere Kategorien, privat)
+
+![Fahrtenbuch Hauptfenster](https://github.com/jku-win-se/teaching-2023.ws.prse.braeuer.team3/blob/main/docs/screenshots/Screenshot%202024-02-09%20064545.png)
+
+### Erweiterte Kilometerstatistik
+Eine weitere Tabelle zeigt die erweiterte Kilometerstatistik:
+- Monatlich aufgeschlüsselt
+- Kategorisiert nach geschäftlich, weitere Kategorien und privat
+
+![Fahrtenbuch Hauptfenster](https://github.com/jku-win-se/teaching-2023.ws.prse.braeuer.team3/blob/main/docs/screenshots/Screenshot%202024-02-09%20064600.png)
+
+### Diagramme
+Balkendiagramme stellen die gefahrenen Kilometer dar:
+- Pro Monat und Jahr
+- Farblich differenziert nach Kategorien
+
+![Fahrtenbuch Hauptfenster](https://github.com/jku-win-se/teaching-2023.ws.prse.braeuer.team3/blob/main/docs/screenshots/Screenshot%202024-02-09%20064616.png)
+  
+![Fahrtenbuch Hauptfenster](https://github.com/jku-win-se/teaching-2023.ws.prse.braeuer.team3/blob/main/docs/screenshots/Screenshot%202024-02-09%20064627.png)
+
+### Filter Dialog
+Ein Dialogfenster ermöglicht das Filtern von Fahrten anhand von:
+- Datum
+- Kategorie
+- Durchschnittsgeschwindigkeit
+Mit Optionen zum Zurücksetzen oder Abbrechen der Filteraktion.
+
+![Fahrtenbuch Hauptfenster](https://github.com/jku-win-se/teaching-2023.ws.prse.braeuer.team3/blob/main/docs/screenshots/Screenshot%202024-02-09%20064638.png)
+
+
+
+
