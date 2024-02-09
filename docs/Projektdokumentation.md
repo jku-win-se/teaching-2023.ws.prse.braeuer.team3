@@ -56,7 +56,7 @@ Hannes Mayrhofer, Markus Lindner, Sara Kheribi, Milan Keta
 # Überblick über das System aus Entwicklersicht
 ![](umldiagramm.png)
 
-##
+
 
 
 ##
@@ -214,7 +214,7 @@ Benutzer können Fahrten aufzeichnen und verwalten, indem sie:
 - Neue Einträge hinzufügen
 - Bestehende bearbeiten
 - Statistiken einsehen
-- 
+  
 ![Fahrtenbuch Hauptfenster](https://github.com/jku-win-se/teaching-2023.ws.prse.braeuer.team3/blob/main/docs/screenshots/Screenshot%202024-02-09%20064433.png "Hauptfenster der Fahrtenbuch-App")
 
 ### Neue Fahrt erfassen
